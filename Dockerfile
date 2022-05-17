@@ -1,15 +1,4 @@
-FROM golang:1.17-alpine AS builder
-ENV CGO_ENABLED=0
-RUN apk add --update make
-WORKDIR /backend
-COPY go.* .
-RUN --mount=type=cache,target=/go/pkg/mod \
-    --mount=type=cache,target=/root/.cache/go-build \
-    go mod download
-COPY . .
-RUN --mount=type=cache,target=/go/pkg/mod \
-    --mount=type=cache,target=/root/.cache/go-build \
-    make bin
+FROM ddosify/ddosify AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
@@ -34,9 +23,9 @@ LABEL org.opencontainers.image.title="ddosify-docker-extension" \
     com.docker.extension.additional-urls="" \
     com.docker.extension.changelog=""
 
-COPY --from=builder /backend/bin/service /
+COPY --from=builder /bin/ddosify /
 COPY docker-compose.yaml .
 COPY metadata.json .
 COPY docker.svg .
 COPY --from=client-builder /ui/build ui
-CMD /service -socket /run/guest-services/extension-ddosify-docker-extension.sock
+CMD [ "sleep", "infinity" ]

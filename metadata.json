@@ -1,19 +1,13 @@
 {
   "icon": "docker.svg",
   "vm": {
-    "composefile": "docker-compose.yaml",
-    "exposes": {
-      "socket": "extension-ddosify-docker-extension.sock"
-    }
+    "image": "${DESKTOP_PLUGIN_IMAGE}"
   },
   "ui": {
     "dashboard-tab": {
       "title": "Ddosify-Docker-Extension",
       "src": "index.html",
-      "root": "ui",
-      "backend": {
-        "socket": "extension-ddosify-docker-extension.sock"
-      }
+      "root": "ui"
     }
   }
 }
