@@ -1,5 +1,6 @@
 import { DockerMuiThemeProvider } from "@docker/docker-mui-theme";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
+import { Grid, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import React, { useEffect, useState } from "react";
@@ -16,6 +17,14 @@ function App() {
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
 
+  const [options, setOptions] = useState({
+    target: "",
+    protocol: "http",
+    method: "GET",
+    duration: 10,
+    request_count: 100,
+  });
+
   useEffect(() => {
     if (res !== "") {
       let prevBackendInfo = backendInfo;
@@ -31,7 +40,14 @@ function App() {
     if (running) {
       ddClient.extension.vm.cli.exec(
         "./ddosify",
-        ["-t", "app.servdown.com", "-n", "15", "-d", "15"],
+        [
+          "-t",
+          options.target,
+          "-n",
+          options.request_count,
+          "-d",
+          options.duration,
+        ],
         {
           stream: {
             onOutput(data) {
@@ -78,18 +94,73 @@ function App() {
           onClick={() => setRunning(true)}
           disabled={running}
         >
-          Calle Ddosify
+          Run Ddosify
         </Button>
-        <pre
-          style={{
-            "text-align": "left",
-            backgroundColor: "#323028",
-            border: "3px solid #999",
-            padding: "20px",
-          }}
+
+        <Grid
+          container
+          owSpacing={1}
+          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          style={{ marginTop: "1rem" }}
         >
-          {backendInfo}
-        </pre>
+          <Grid item>
+            <TextField
+              required
+              variant="filled"
+              label="URL"
+              value={options?.target}
+              onChange={(e) =>
+                setOptions((prevState) => ({
+                  ...prevState,
+                  target: e.target.value,
+                }))
+              }
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              required
+              variant="filled"
+              label="Request Count"
+              type="number"
+              value={options?.request_count}
+              onChange={(e) =>
+                setOptions((prevState) => ({
+                  ...prevState,
+                  request_count: e.target.value,
+                }))
+              }
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              required
+              variant="filled"
+              label="Duration (s)"
+              type="number"
+              value={options?.duration}
+              onChange={(e) =>
+                setOptions((prevState) => ({
+                  ...prevState,
+                  duration: e.target.value,
+                }))
+              }
+            />
+          </Grid>
+        </Grid>
+        <Grid container style={{ marginTop: "3rem" }}>
+          <pre
+            style={{
+              "text-align": "left",
+              backgroundColor: "#323028",
+              border: "3px solid #999",
+              padding: "20px",
+              width: "100%",
+            }}
+          >
+            {backendInfo}
+          </pre>
+        </Grid>
       </div>
     </DockerMuiThemeProvider>
   );
