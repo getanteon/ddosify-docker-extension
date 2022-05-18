@@ -5,7 +5,7 @@
   },
   "ui": {
     "dashboard-tab": {
-      "title": "Ddosify-Docker-Extension",
+      "title": "Ddosify",
       "src": "index.html",
       "root": "ui"
     }
