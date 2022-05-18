@@ -28,12 +28,12 @@ function App() {
 
   const clearEmoji = (str) => {
     return str
-      .replace("â\x9A\x99ï¸\x8F  ", "")
-      .replace("ð\x9F\x94¥ ", "")
-      .replace("ð\x9F\x9B\x91 ", "")
-      .replace("â\x9C\x94ï¸\x8F  ", "")
-      .replace("â\x9D\x8C ", "")
-      .replace("â\x8F±ï¸\x8F  ", "");
+      .replace("â\x9A\x99ï¸\x8F  ", "⚙️ ")
+      .replace("ð\x9F\x94¥ ", "🔥 ")
+      .replace("ð\x9F\x9B\x91 ", "🛑 ")
+      .replace("â\x9C\x94ï¸\x8F  ", "✔️ ")
+      .replace("â\x9D\x8C ", "❌ ")
+      .replace("â\x8F±ï¸\x8F  ", "⏱️ ");
   };
 
   const get = async () => {
