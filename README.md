@@ -5,7 +5,7 @@
 docker extension dev debug ddosify/ddosify-docker-extension
 docker extension dev ui-source ddosify/ddosify-docker-extension http://localhost:3000
 
-cd ui && npm start
+cd ui && npm install && npm start
 ```
 
 - Reset
