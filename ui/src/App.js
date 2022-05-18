@@ -74,6 +74,13 @@ function App() {
     }
   }, [running]);
 
+  const stopDdosify = async () => {
+    ddClient.extension.vm.cli.exec(
+      "killall",
+      ["-SIGINT", "ddosify"]
+    );
+  };
+
   const clearEmoji = (str) => {
     return str
       .replace("â\x9A\x99ï¸\x8F  ", "⚙️ ")
@@ -95,6 +102,14 @@ function App() {
           disabled={running}
         >
           Run Ddosify
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={stopDdosify}
+          disabled={!running}
+        >
+          Stop
         </Button>
 
         <Grid
