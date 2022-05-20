@@ -1,11 +1,21 @@
 import { DockerMuiThemeProvider } from "@docker/docker-mui-theme";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
 import {
+  Box,
+  Divider,
   FormControl,
+  FormControlLabel,
   FormGroup,
+  FormHelperText,
+  FormLabel,
   Grid,
+  Input,
   InputLabel,
+  Radio,
+  RadioGroup,
   Select,
+  Tab,
+  Tabs,
   TextField,
 } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -74,6 +84,7 @@ function App() {
     method: "GET",
     duration: 10,
     request_count: 100,
+    load_type: "linear",
   });
 
   useEffect(() => {
@@ -102,6 +113,8 @@ function App() {
           options.protocol,
           "-m",
           options.method,
+          "-l",
+          options.load_type,
         ],
         {
           stream: {
@@ -138,11 +151,12 @@ function App() {
       .replace("â\x9A\x99ï¸\x8F  ", "⚙️ ")
       .replace("ð\x9F\x94¥ ", "🔥 ")
       .replace("ð\x9F\x9B\x91 ", "")
-      .replace("â\x9C\x94ï¸\x8F  ", "✔️ ")
+      .replace("â\x9C\x94ï¸\x8F  ", "✅ ")
       .replace("â\x9D\x8C ", "❌ ")
       .replace("â\x8F±ï¸\x8F  ", "⏱️ ")
       .replace("CTRL+C to gracefully stop.", "");
   };
+  
 
   return (
     <DockerMuiThemeProvider>
@@ -151,8 +165,8 @@ function App() {
         <Grid
           container
           columnSpacing={{ xs: 1 }}
-          rowSpacing={2}
-          style={{ marginTop: "5rem" }}
+          rowSpacing={4}
+          style={{ marginTop: "2rem", padding: "4rem" }}
         >
           <Grid container item>
             <Grid item xs={1}>
@@ -166,7 +180,7 @@ function App() {
                     method: e.target.value,
                   }))
                 }
-                helperText="Method"
+                // helperText="Method"
               >
                 {methods.map((method) => (
                   <MenuItem key={method.value} value={method.value}>
@@ -188,7 +202,7 @@ function App() {
                       protocol: e.target.value,
                     }))
                   }
-                  helperText="Protocol"
+                  // helperText="Protocol"
                 >
                   {protocols.map((protocol) => (
                     <MenuItem key={protocol.value} value={protocol.value}>
@@ -199,11 +213,13 @@ function App() {
               </Grid>
               <Grid item xs={11}>
                 <TextField
+                  error={options?.target === ""}
                   style={{ width: "100%" }}
                   required
-                  variant="outlined"
+                  variant="filled"
                   placeholder="example.com"
-                  helperText="Target URL"
+                  // helperText="Target URL"
+                  label="Target URL"
                   value={options?.target}
                   onChange={(e) =>
                     setOptions((prevState) => ({
@@ -219,6 +235,7 @@ function App() {
           <Grid item container columnSpacing={{ xs: 2 }}>
             <Grid item>
               <TextField
+                error={options?.request_count === ""}
                 required
                 variant="filled"
                 label="Request Count"
@@ -234,6 +251,7 @@ function App() {
             </Grid>
             <Grid item>
               <TextField
+                error={options?.duration === ""}
                 required
                 variant="filled"
                 label="Duration (s)"
@@ -247,8 +265,42 @@ function App() {
                 }
               />
             </Grid>
+            <Grid item>
+              <FormControl>
+                <FormLabel style={{ textAlign: "left" }} required>
+                  Load Type
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={options?.load_type}
+                  onChange={(e) =>
+                    setOptions((prevState) => ({
+                      ...prevState,
+                      load_type: e.target.value,
+                    }))
+                  }
+                >
+                  <FormControlLabel
+                    value="linear"
+                    control={<Radio />}
+                    label="Linear"
+                  />
+                  <FormControlLabel
+                    value="incremental"
+                    control={<Radio />}
+                    label="Incremental"
+                  />
+                  <FormControlLabel
+                    value="waved"
+                    control={<Radio />}
+                    label="Waved"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid container></Grid>
 
           <Grid
             item
@@ -264,7 +316,7 @@ function App() {
                 onClick={() => setRunning(true)}
                 disabled={running}
               >
-                Run Ddosify
+                Start Load Test
               </Button>
             </Grid>
             <Grid item>
@@ -283,7 +335,7 @@ function App() {
             <pre
               style={{
                 textAlign: "left",
-                backgroundColor: "#323028",
+                backgroundColor: "rgb(52,63,69",
                 border: "3px solid #999",
                 padding: "20px",
                 width: "100%",
