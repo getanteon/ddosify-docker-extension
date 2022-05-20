@@ -1,6 +1,9 @@
 import { DockerMuiThemeProvider } from "@docker/docker-mui-theme";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Divider,
   FormControl,
@@ -17,6 +20,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -156,7 +160,6 @@ function App() {
       .replace("â\x8F±ï¸\x8F  ", "⏱️ ")
       .replace("CTRL+C to gracefully stop.", "");
   };
-  
 
   return (
     <DockerMuiThemeProvider>
@@ -300,6 +303,25 @@ function App() {
                 </RadioGroup>
               </FormControl>
             </Grid>
+          </Grid>
+
+          <Grid item container>
+            <Accordion>
+              <AccordionSummary
+                // expandIcon={<ExpandMoreIcon />}
+                // aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Advanced</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
+                  eget.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
           </Grid>
 
           <Grid
