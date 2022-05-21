@@ -4,21 +4,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
-  Divider,
   FormControl,
   FormControlLabel,
-  FormGroup,
-  FormHelperText,
   FormLabel,
   Grid,
-  Input,
-  InputLabel,
   Radio,
   RadioGroup,
-  Select,
-  Tab,
-  Tabs,
+  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -161,6 +153,10 @@ function App() {
       .replace("CTRL+C to gracefully stop.", "");
   };
 
+  const openExternalLink = (url) => {
+    return window.ddClient.host.openExternal("https://ddosify.com");
+  };
+
   return (
     <DockerMuiThemeProvider>
       <CssBaseline />
@@ -169,10 +165,38 @@ function App() {
           container
           columnSpacing={{ xs: 1 }}
           rowSpacing={4}
-          style={{ marginTop: "2rem", padding: "4rem" }}
+          style={{ padding: "4rem" }}
         >
           <Grid container item>
-            <Grid item xs={1}>
+            <Grid container item>
+              <img
+                height="100px"
+                src="https://ddosify.com/assets/img/ddosify-orange-logo.svg"
+                style={{
+                  display: "block",
+                  marginRight: "auto",
+                  marginLeft: "auto",
+                }}
+              />
+            </Grid>
+            <Grid container item>
+              <Typography
+                style={{
+                  display: "block",
+                  marginRight: "auto",
+                  marginLeft: "auto",
+                }}
+              >
+                High-performance and simple load testing tool. For no-code,
+                distributed and geo-targeted Load Testing you can use{" "}
+                <Link href="#" onClick={openExternalLink}>
+                  Ddosify Cloud.
+                </Link>
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container item>
+            <Grid item xs={1.6}>
               <TextField
                 style={{ width: "100%", textAlign: "left" }}
                 select
@@ -193,8 +217,8 @@ function App() {
               </TextField>
             </Grid>
             <Grid item xs={0.2}></Grid>
-            <Grid item xs={10.8} container>
-              <Grid item xs={1}>
+            <Grid item xs={10} container>
+              <Grid item xs={1.6}>
                 <TextField
                   style={{ width: "100%", textAlign: "left" }}
                   select
@@ -214,7 +238,7 @@ function App() {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={11}>
+              <Grid item xs={10.4}>
                 <TextField
                   error={options?.target === ""}
                   style={{ width: "100%" }}
