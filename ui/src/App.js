@@ -91,6 +91,7 @@ function App() {
     body: "",
     basic_auth_username: "",
     basic_auth_password: "",
+    proxy: "",
   });
 
   const [headers, setHeaders] = useState([]);
@@ -118,6 +119,12 @@ function App() {
     setbasicAuthChecked(event.target.checked);
   };
 
+  const [proxyChecked, setProxyChecked] = React.useState(false);
+
+  const handleProxyChange = (event) => {
+    setProxyChecked(event.target.checked);
+  };
+
   useEffect(() => {
     if (res !== "") {
       let prevBackendInfo = backendInfo;
@@ -131,6 +138,22 @@ function App() {
 
   useEffect(() => {
     if (running) {
+      if (options.request_count > 5000) {
+        ddClient.desktopUI.toast.error(
+          "Request count is limited to 5000, for more you can use Ddosify Cloud."
+        );
+        setRunning(false);
+        return;
+      }
+
+      if (options.duration > 100) {
+        ddClient.desktopUI.toast.error(
+          "Duration is limited to 100 seconds, for more you can use Ddosify Cloud."
+        );
+        setRunning(false);
+        return;
+      }
+
       var args = [
         "-t",
         options.target,
@@ -164,6 +187,10 @@ function App() {
           "-a",
           options.basic_auth_username + ":" + options.basic_auth_password
         );
+      }
+
+      if (options.proxy !== "" && proxyChecked) {
+        args.push("-P", options.proxy);
       }
 
       console.log(args);
@@ -298,10 +325,10 @@ function App() {
                   error={options?.target === ""}
                   style={{ width: "100%" }}
                   required
-                  variant="filled"
+                  // variant="filled"
                   placeholder="example.com"
                   // helperText="Target URL"
-                  label="Target URL"
+                  // label="Target URL"
                   value={options?.target}
                   onChange={(e) =>
                     setOptions((prevState) => ({
@@ -547,6 +574,45 @@ function App() {
                     </Grid>
                   </CardContent>
                 </Card>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Grid item container>
+                      <FormControlLabel
+                        style={{ textAlign: "left", display: "flex" }}
+                        control={
+                          <Checkbox
+                            checked={proxyChecked}
+                            onChange={handleProxyChange}
+                          />
+                        }
+                        label="Proxy"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      visibility={proxyChecked ? "initial" : "hidden"}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Grid xs={12}>
+                        <TextField
+                          style={{ width: "100%" }}
+                          size="small"
+                          required
+                          variant="outlined"
+                          placeholder="http://user:pass@proxy_host.com:port"
+                          value={options?.proxy}
+                          onChange={(e) =>
+                            setOptions((prevState) => ({
+                              ...prevState,
+                              proxy: e.target.value,
+                            }))
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -580,7 +646,12 @@ function App() {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container style={{ marginTop: "3rem" }}>
+          <Grid
+            item
+            container
+            style={{ marginTop: "3rem" }}
+            visibility={backendInfo === "" ? "hidden" : "initial"}
+          >
             <pre
               style={{
                 textAlign: "left",
