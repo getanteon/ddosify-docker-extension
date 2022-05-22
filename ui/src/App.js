@@ -154,6 +154,12 @@ function App() {
         return;
       }
 
+      if (options.target === "") {
+        ddClient.desktopUI.toast.warning("Please enter a target URL");
+        setRunning(false);
+        return;
+      }
+
       var args = [
         "-t",
         options.target,
@@ -170,9 +176,20 @@ function App() {
         "-T",
         options.timeout,
       ];
-      headers.map((element, index) =>
-        args.push("-h", element.key + ":" + element.value)
-      );
+      for (let index in headers) {
+        var element = headers[index];
+        if (element.key === "") {
+          ddClient.desktopUI.toast.warning("Header key can not be empty");
+          setRunning(false);
+          return;
+        }
+        if (element.value === "") {
+          ddClient.desktopUI.toast.warning("Header value can not be empty");
+          setRunning(false);
+          return;
+        }
+        args.push("-h", element.key + ":" + element.value);
+      }
 
       if (options.body !== "") {
         args.push("-b", options.body);
@@ -327,7 +344,7 @@ function App() {
                   required
                   // variant="filled"
                   placeholder="example.com"
-                  // helperText="Target URL"
+                  helperText="Target URL"
                   // label="Target URL"
                   value={options?.target}
                   onChange={(e) =>
@@ -649,7 +666,7 @@ function App() {
           <Grid
             item
             container
-            style={{ marginTop: "3rem" }}
+            style={{ marginTop: "1rem" }}
             visibility={backendInfo === "" ? "hidden" : "initial"}
           >
             <pre
