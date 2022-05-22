@@ -15,6 +15,7 @@ import {
   Typography,
   Card,
   CardContent,
+  Checkbox,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -88,6 +89,8 @@ function App() {
     load_type: "linear",
     timeout: 5,
     body: "",
+    basic_auth_username: "",
+    basic_auth_password: "",
   });
 
   const [headers, setHeaders] = useState([]);
@@ -107,6 +110,12 @@ function App() {
     let newHeaders = [...headers];
     newHeaders.splice(i, 1);
     setHeaders(newHeaders);
+  };
+
+  const [basicAuthChecked, setbasicAuthChecked] = React.useState(false);
+
+  const handleBasicAuthChange = (event) => {
+    setbasicAuthChecked(event.target.checked);
   };
 
   useEffect(() => {
@@ -144,6 +153,17 @@ function App() {
 
       if (options.body !== "") {
         args.push("-b", options.body);
+      }
+
+      if (
+        options.basic_auth_username !== "" &&
+        options.basic_auth_password !== "" &&
+        basicAuthChecked
+      ) {
+        args.push(
+          "-a",
+          options.basic_auth_username + ":" + options.basic_auth_password
+        );
       }
 
       console.log(args);
@@ -223,7 +243,7 @@ function App() {
                 }}
               >
                 High-performance and simple load testing tool. For no-code,
-                distributed and geo-targeted Load Testing you can use {"  "}
+                distributed and geo-targeted load testing you can use {"  "}
                 <Link href="#" onClick={openExternalLink}>
                   Ddosify Cloud.
                 </Link>
@@ -467,6 +487,63 @@ function App() {
                       >
                         Add Header
                       </Button>
+                    </Grid>
+                  </CardContent>
+                </Card>
+
+                <Card variant="outlined">
+                  <CardContent>
+                    <Grid item container>
+                      <FormControlLabel
+                        style={{ textAlign: "left", display: "flex" }}
+                        control={
+                          <Checkbox
+                            checked={basicAuthChecked}
+                            onChange={handleBasicAuthChange}
+                          />
+                        }
+                        label="Basic Authentication"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      visibility={basicAuthChecked ? "initial" : "hidden"}
+                      style={{ marginTop: "10px" }}
+                    >
+                      <Grid xs={6}>
+                        <TextField
+                          style={{ width: "100%" }}
+                          size="small"
+                          required
+                          variant="outlined"
+                          placeholder="Username"
+                          value={options?.basic_auth_username}
+                          onChange={(e) =>
+                            setOptions((prevState) => ({
+                              ...prevState,
+                              basic_auth_username: e.target.value,
+                            }))
+                          }
+                        />
+                      </Grid>
+                      <Grid xs={6}>
+                        <TextField
+                          style={{ width: "100%" }}
+                          size="small"
+                          required
+                          type="password"
+                          variant="outlined"
+                          placeholder="Password"
+                          value={options?.basic_auth_password}
+                          onChange={(e) =>
+                            setOptions((prevState) => ({
+                              ...prevState,
+                              basic_auth_password: e.target.value,
+                            }))
+                          }
+                        />
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
