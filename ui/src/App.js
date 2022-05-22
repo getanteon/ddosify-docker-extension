@@ -13,11 +13,16 @@ import {
   Link,
   TextField,
   Typography,
+  Card,
+  CardContent,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 
 const protocols = [
@@ -81,7 +86,28 @@ function App() {
     duration: 10,
     request_count: 100,
     load_type: "linear",
+    timeout: 5,
+    body: "",
   });
+
+  const [headers, setHeaders] = useState([]);
+
+  let handleHeaderChange = (i, e) => {
+    let newHeaders = [...headers];
+    newHeaders[i][e.target.name] = e.target.value;
+    setHeaders(newHeaders);
+  };
+
+  let addHeader = () => {
+    setHeaders([...headers, { key: "", value: "" }]);
+    console.log(headers);
+  };
+
+  let removeHeader = (i) => {
+    let newHeaders = [...headers];
+    newHeaders.splice(i, 1);
+    setHeaders(newHeaders);
+  };
 
   useEffect(() => {
     if (res !== "") {
@@ -96,43 +122,52 @@ function App() {
 
   useEffect(() => {
     if (running) {
-      ddClient.extension.vm.cli.exec(
-        "./ddosify",
-        [
-          "-t",
-          options.target,
-          "-n",
-          options.request_count,
-          "-d",
-          options.duration,
-          "-p",
-          options.protocol,
-          "-m",
-          options.method,
-          "-l",
-          options.load_type,
-        ],
-        {
-          stream: {
-            onOutput(data) {
-              if (data?.stdout) {
-                let tmp = res + clearEmoji(data.stdout);
-                setRes(() => tmp);
-              } else {
-                console.log(data.stderr);
-              }
-            },
-            onError(error) {
-              setRunning(false);
-              console.error(error);
-            },
-            onClose(exitCode) {
-              setRunning(false);
-              console.log("onClose with exit code " + exitCode);
-            },
-          },
-        }
+      var args = [
+        "-t",
+        options.target,
+        "-n",
+        options.request_count,
+        "-d",
+        options.duration,
+        "-p",
+        options.protocol,
+        "-m",
+        options.method,
+        "-l",
+        options.load_type,
+        "-T",
+        options.timeout,
+      ];
+      headers.map((element, index) =>
+        args.push("-h", element.key + ":" + element.value)
       );
+
+      if (options.body !== "") {
+        args.push("-b", options.body);
+      }
+
+      console.log(args);
+
+      ddClient.extension.vm.cli.exec("./ddosify", args, {
+        stream: {
+          onOutput(data) {
+            if (data?.stdout) {
+              let tmp = res + clearEmoji(data.stdout);
+              setRes(() => tmp);
+            } else {
+              console.log(data.stderr);
+            }
+          },
+          onError(error) {
+            setRunning(false);
+            console.error(error);
+          },
+          onClose(exitCode) {
+            setRunning(false);
+            console.log("onClose with exit code " + exitCode);
+          },
+        },
+      });
     } else {
       setRes("");
     }
@@ -188,7 +223,7 @@ function App() {
                 }}
               >
                 High-performance and simple load testing tool. For no-code,
-                distributed and geo-targeted Load Testing you can use{" "}
+                distributed and geo-targeted Load Testing you can use {"  "}
                 <Link href="#" onClick={openExternalLink}>
                   Ddosify Cloud.
                 </Link>
@@ -217,7 +252,7 @@ function App() {
               </TextField>
             </Grid>
             <Grid item xs={0.2}></Grid>
-            <Grid item xs={10} container>
+            <Grid item xs={10.2} container>
               <Grid item xs={1.6}>
                 <TextField
                   style={{ width: "100%", textAlign: "left" }}
@@ -330,20 +365,111 @@ function App() {
           </Grid>
 
           <Grid item container>
-            <Accordion>
+            <Accordion style={{ width: "100%" }}>
               <AccordionSummary
-                // expandIcon={<ExpandMoreIcon />}
-                // aria-controls="panel1a-content"
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography>Advanced</Typography>
+                <Typography variant="h6">Advanced</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget.
-                </Typography>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Grid item container columnSpacing={{ xs: 2 }}>
+                      <Grid item xs={2}>
+                        <TextField
+                          style={{ width: "100%" }}
+                          required
+                          variant="filled"
+                          label="Timeout"
+                          type="number"
+                          value={options?.timeout}
+                          onChange={(e) =>
+                            setOptions((prevState) => ({
+                              ...prevState,
+                              timeout: e.target.value,
+                            }))
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={10}>
+                        <TextField
+                          style={{ width: "100%" }}
+                          variant="filled"
+                          label="Body"
+                          value={options?.body}
+                          onChange={(e) =>
+                            setOptions((prevState) => ({
+                              ...prevState,
+                              body: e.target.value,
+                            }))
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography
+                      textAlign={"left"}
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                    >
+                      Headers
+                    </Typography>
+                    {headers.map((element, index) => (
+                      <Grid
+                        item
+                        container
+                        key={index}
+                        style={{ marginBottom: "5px" }}
+                      >
+                        <Grid xs={5.5}>
+                          <TextField
+                            style={{ width: "100%" }}
+                            size="small"
+                            name="key"
+                            required
+                            variant="outlined"
+                            placeholder="Key"
+                            value={element.key || ""}
+                            onChange={(e) => handleHeaderChange(index, e)}
+                          />
+                        </Grid>
+                        <Grid xs={5.5}>
+                          <TextField
+                            style={{ width: "100%" }}
+                            size="small"
+                            name="value"
+                            required
+                            variant="outlined"
+                            placeholder="Value"
+                            value={element.value || ""}
+                            onChange={(e) => handleHeaderChange(index, e)}
+                          />
+                        </Grid>
+                        <Grid xs={1}>
+                          <IconButton onClick={() => removeHeader(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    ))}
+                    <Grid item container>
+                      <Button
+                        style={{ marginTop: "10px" }}
+                        variant="outlined"
+                        onClick={() => addHeader()}
+                      >
+                        Add Header
+                      </Button>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </AccordionDetails>
             </Accordion>
           </Grid>
