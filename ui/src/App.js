@@ -104,7 +104,7 @@ function App() {
 
   let addHeader = () => {
     setHeaders([...headers, { key: "", value: "" }]);
-    console.log(headers);
+    // console.log(headers);
   };
 
   let removeHeader = (i) => {
@@ -210,7 +210,7 @@ function App() {
         args.push("-P", options.proxy);
       }
 
-      console.log(args);
+      // console.log(args);
 
       ddClient.extension.vm.cli.exec("./ddosify", args, {
         stream: {
@@ -228,7 +228,7 @@ function App() {
           },
           onClose(exitCode) {
             setRunning(false);
-            console.log("onClose with exit code " + exitCode);
+            // console.log("onClose with exit code " + exitCode);
           },
         },
       });
