@@ -492,7 +492,7 @@ function App() {
                         key={index}
                         style={{ marginBottom: "5px" }}
                       >
-                        <Grid xs={5.5}>
+                        <Grid item xs={5.5}>
                           <TextField
                             style={{ width: "100%" }}
                             size="small"
@@ -504,7 +504,7 @@ function App() {
                             onChange={(e) => handleHeaderChange(index, e)}
                           />
                         </Grid>
-                        <Grid xs={5.5}>
+                        <Grid item xs={5.5}>
                           <TextField
                             style={{ width: "100%" }}
                             size="small"
@@ -516,7 +516,7 @@ function App() {
                             onChange={(e) => handleHeaderChange(index, e)}
                           />
                         </Grid>
-                        <Grid xs={1}>
+                        <Grid item xs={1}>
                           <IconButton onClick={() => removeHeader(index)}>
                             <DeleteIcon />
                           </IconButton>
@@ -555,7 +555,7 @@ function App() {
                       visibility={basicAuthChecked ? "initial" : "hidden"}
                       style={{ marginTop: "10px" }}
                     >
-                      <Grid xs={6}>
+                      <Grid item xs={6}>
                         <TextField
                           style={{ width: "100%" }}
                           size="small"
@@ -571,7 +571,7 @@ function App() {
                           }
                         />
                       </Grid>
-                      <Grid xs={6}>
+                      <Grid item xs={6}>
                         <TextField
                           style={{ width: "100%" }}
                           size="small"
@@ -611,7 +611,7 @@ function App() {
                       visibility={proxyChecked ? "initial" : "hidden"}
                       style={{ marginTop: "10px" }}
                     >
-                      <Grid xs={12}>
+                      <Grid item xs={12}>
                         <TextField
                           style={{ width: "100%" }}
                           size="small"
