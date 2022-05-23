@@ -1,4 +1,4 @@
-FROM ddosify/ddosify AS builder
+FROM ddosify/ddosify:v0.7.9 AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/usr/src/app/.npm \
 COPY ui /ui
 RUN npm run build
 
-FROM alpine
+FROM alpine:3.15.4
 
 ARG EXTENSION_NAME='Ddosify'
 ARG DESCRIPTION='High-performance, open-source and simple load testing tool, written in Golang.'

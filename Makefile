@@ -1,5 +1,5 @@
 IMAGE?=ddosify/ddosify-docker-extension
-TAG?=latest
+TAG?=0.0.1
 
 BUILDER=buildx-multi-arch
 
@@ -25,6 +25,9 @@ update-extension: build-extension ## Update the extension
 
 remove-extension: ## Remove the extension
 	docker extension rm $(IMAGE):$(TAG)
+
+validate-extension: ## Validate the extension
+	docker extension validate $(IMAGE):$(TAG)
 
 prepare-buildx: ## Create buildx builder for multi-arch build, if not exists
 	docker buildx inspect $(BUILDER) || docker buildx create --name=$(BUILDER) --driver=docker-container --driver-opt=network=host
