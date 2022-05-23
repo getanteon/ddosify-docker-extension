@@ -694,7 +694,6 @@ function App() {
             <pre
               style={{
                 textAlign: "left",
-                backgroundColor: "rgb(52,63,69",
                 border: "3px solid #999",
                 padding: "20px",
                 width: "100%",
