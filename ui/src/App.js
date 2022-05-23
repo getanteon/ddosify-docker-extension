@@ -270,7 +270,7 @@ function App() {
             <Grid container item>
               <img
                 height="100px"
-                src="https://ddosify.com/assets/img/ddosify-orange-logo.svg"
+                src="https://ddosify-assets-analytics.s3.us-east-2.amazonaws.com/ddosify-docker-logo.svg"
                 style={{
                   display: "block",
                   marginRight: "auto",
