@@ -308,7 +308,7 @@ function App() {
                   marginLeft: "auto",
                 }}
               >
-                High-performance and simple load testing tool. For no-code,
+                High-performance, open-source and simple load testing tool. For no-code,
                 distributed and geo-targeted load testing you can use {"  "}
                 <Link href="#" onClick={openExternalLinkCloud}>
                   Ddosify Cloud.
