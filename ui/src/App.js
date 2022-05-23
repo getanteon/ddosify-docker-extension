@@ -16,6 +16,8 @@ import {
   Card,
   CardContent,
   Checkbox,
+  Box,
+  Stack,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -252,8 +254,28 @@ function App() {
       .replace("CTRL+C to gracefully stop.", "");
   };
 
-  const openExternalLink = (url) => {
-    return window.ddClient.host.openExternal("https://ddosify.com");
+  const openExternalLinkCloud = () => {
+    return window.ddClient.host.openExternal(
+      "https://ddosify.com?utm_source=dockerextension"
+    );
+  };
+
+  const openExternalLinkGithub = () => {
+    return window.ddClient.host.openExternal(
+      "https://github.com/ddosify/ddosify?utm_source=dockerextension"
+    );
+  };
+
+  const openExternalLinkDocs = () => {
+    return window.ddClient.host.openExternal(
+      "https://docs.ddosify.com?utm_source=dockerextension"
+    );
+  };
+
+  const openExternalLinkDiscord = () => {
+    return window.ddClient.host.openExternal(
+      "https://discord.gg/9KdnrSUZQg?utm_source=dockerextension"
+    );
   };
 
   return (
@@ -288,7 +310,7 @@ function App() {
               >
                 High-performance and simple load testing tool. For no-code,
                 distributed and geo-targeted load testing you can use {"  "}
-                <Link href="#" onClick={openExternalLink}>
+                <Link href="#" onClick={openExternalLinkCloud}>
                   Ddosify Cloud.
                 </Link>
               </Typography>
@@ -681,6 +703,49 @@ function App() {
               {backendInfo}
             </pre>
           </Grid>
+        </Grid>
+
+        <Grid container style={{ padding: "4rem", width: "100%" }}>
+          <Box
+            style={{ width: "100%" }}
+            sx={{ py: 5, px: 3, borderRadius: 5, boxShadow: 6 }}
+          >
+            <Stack
+              direction="row"
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography
+                  style={{
+                    display: "block",
+                    marginRight: "auto",
+                    marginLeft: "auto",
+                  }}
+                >
+                  More? Check out the {"  "}
+                  <Link href="#" onClick={openExternalLinkGithub}>
+                    Github
+                  </Link>
+                  {"  "}
+                  open-source repository,  {"  "}
+                  <Link href="#" onClick={openExternalLinkDocs}>
+                    Documentation
+                  </Link>
+                  {"  "} or join our {"  "}
+                  <Link href="#" onClick={openExternalLinkDiscord}>
+                    Discord Server
+                  </Link>
+                  {"  "} for issues, feature requests and feedbacks.
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
         </Grid>
       </div>
     </DockerMuiThemeProvider>
