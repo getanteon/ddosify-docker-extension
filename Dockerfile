@@ -23,7 +23,7 @@ ARG ICON_URL='https://ddosify-assets-us.s3.us-east-2.amazonaws.com/ddosify-icon.
 ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://ddosify-assets-us.s3.us-east-2.amazonaws.com/01_ddosify_intro.png" }, { "alt": "Ddosify Load Test View", "url": "https://ddosify-assets-us.s3.us-east-2.amazonaws.com/02_ddosify_load_test.png" }, { "alt": "Ddosify Advanced View", "url": "https://ddosify-assets-us.s3.us-east-2.amazonaws.com/03_ddosify_advanced.png" } ]'
 ARG PUBLISHER_URL='https://ddosify.com/'
 ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
-ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Ddosify extension initial release</li> <li>Fix ddosify icon</li> </ul>'
+ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Ddosify extension initial release</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
 LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \
