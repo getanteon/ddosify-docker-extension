@@ -164,13 +164,11 @@ function App() {
 
       var args = [
         "-t",
-        options.target,
+        options.protocol + "://" + options.target,
         "-n",
         options.request_count,
         "-d",
         options.duration,
-        "-p",
-        options.protocol,
         "-m",
         options.method,
         "-l",
@@ -278,6 +276,12 @@ function App() {
     );
   };
 
+  const openExternalLinkDynamicVariables = () => {
+    return window.ddClient.host.openExternal(
+      "https://docs.ddosify.com/extra/dynamic-variables-parameterization?utm_source=dockerextension"
+    );
+  };
+
   return (
     <DockerMuiThemeProvider>
       <CssBaseline />
@@ -308,8 +312,9 @@ function App() {
                   marginLeft: "auto",
                 }}
               >
-                High-performance, open-source and simple load testing tool. For no-code,
-                distributed and geo-targeted load testing you can use {"  "}
+                High-performance, open-source and simple load testing tool. For
+                no-code, distributed and geo-targeted load testing you can use{" "}
+                {"  "}
                 <Link href="#" onClick={openExternalLinkCloud}>
                   Ddosify Cloud.
                 </Link>
@@ -661,7 +666,29 @@ function App() {
             container
             columnSpacing={{ xs: 2 }}
             justifyContent="flex-start"
-            style={{ marginTop: "3rem" }}
+          >
+            <Grid item>
+              <Typography>
+                <span style={{ color: "#aaa49f" }}>
+                  Tip: Use{" "}
+                  <span style={{ color: "#00cfe8" }}>
+                    {"{{_variableName}}"}
+                  </span>{" "}
+                  format to inject dynamic variables on inputs. {"  "}
+                  <Link href="#" onClick={openExternalLinkDynamicVariables}>
+                    Learn more →
+                  </Link>
+                </span>
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid
+            item
+            container
+            columnSpacing={{ xs: 2 }}
+            justifyContent="flex-start"
+            style={{ marginTop: "1rem" }}
           >
             <Grid item>
               <Button
@@ -732,7 +759,7 @@ function App() {
                     Github
                   </Link>
                   {"  "}
-                  open-source repository,  {"  "}
+                  open-source repository, {"  "}
                   <Link href="#" onClick={openExternalLinkDocs}>
                     Documentation
                   </Link>

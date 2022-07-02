@@ -1,3 +1,4 @@
 services:
   ddosify-docker-extension:
     image: ${DESKTOP_PLUGIN_IMAGE}
+    network_mode: "host"
