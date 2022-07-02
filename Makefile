@@ -1,5 +1,5 @@
 IMAGE?=ddosify/ddosify-docker-extension
-TAG?=0.0.2
+TAG?=0.1.0
 
 BUILDER=buildx-multi-arch
 
