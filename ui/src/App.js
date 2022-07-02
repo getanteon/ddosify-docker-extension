@@ -109,6 +109,13 @@ function App() {
     // console.log(headers);
   };
 
+  let listContainers = () => {
+
+    const containers = ddClient.listContainers();
+    console.log(containers);
+    
+  };
+
   let removeHeader = (i) => {
     let newHeaders = [...headers];
     newHeaders.splice(i, 1);
@@ -682,6 +689,17 @@ function App() {
                 disabled={!running}
               >
                 Stop
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                size="large"
+                variant="contained"
+                color="error"
+                onClick={stopDdosify}
+                disabled={!running}
+              >
+                List Containers
               </Button>
             </Grid>
           </Grid>
