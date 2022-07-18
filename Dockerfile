@@ -1,4 +1,4 @@
-FROM ddosify/ddosify:v0.8.0 AS builder
+FROM ddosify/ddosify:v0.8.1 AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
@@ -23,7 +23,7 @@ ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/ddosify-icon.svg'
 ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/01_ddosify_intro.png" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/02_ddosify_load_test.png" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/03_ddosify_advanced.png" } ]'
 ARG PUBLISHER_URL='https://ddosify.com/'
 ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
-ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.8.0</li> <li>Enable host networking for local load testing</li> <li>Add Ddosify dynamic variables support. <a href='https://docs.ddosify.com/extra/dynamic-variables-parameterization'>Learn more.</a> </li> </ul>'
+ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.8.1</li> <li>Fix _timestamp dynamic variable</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
 LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \
