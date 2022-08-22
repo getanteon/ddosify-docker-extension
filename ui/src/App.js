@@ -96,7 +96,7 @@ function App() {
     proxy: "",
   });
 
-  const [headers, setHeaders] = useState([]);
+  const [headers, setHeaders] = useState([{ key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" }]);
 
   let handleHeaderChange = (i, e) => {
     let newHeaders = [...headers];
