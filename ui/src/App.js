@@ -147,10 +147,24 @@ function App() {
         setRunning(false);
         return;
       }
+      if (options.request_count <= 0) {
+        ddClient.desktopUI.toast.error(
+          "Request count must be positive"
+        );
+        setRunning(false);
+        return;
+      }
 
       if (options.duration > 100) {
         ddClient.desktopUI.toast.error(
           "Duration is limited to 100 seconds, for more you can use Ddosify Cloud."
+        );
+        setRunning(false);
+        return;
+      }
+      if (options.duration <= 0) {
+        ddClient.desktopUI.toast.error(
+          "Duration must be positive"
         );
         setRunning(false);
         return;
@@ -220,6 +234,7 @@ function App() {
               setRes(() => tmp);
             } else {
               console.log(data.stderr);
+              ddClient.desktopUI.toast.error(data.stderr);
             }
           },
           onError(error) {
@@ -388,7 +403,7 @@ function App() {
           <Grid item container columnSpacing={{ xs: 2 }}>
             <Grid item>
               <TextField
-                error={options?.request_count === ""}
+                error={options?.request_count === "" || options?.request_count <= 0}
                 required
                 variant="filled"
                 label="Request Count"
@@ -404,7 +419,7 @@ function App() {
             </Grid>
             <Grid item>
               <TextField
-                error={options?.duration === ""}
+                error={options?.duration === "" || options?.duration <= 0}
                 required
                 variant="filled"
                 label="Duration (s)"
