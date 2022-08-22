@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/usr/src/app/.npm \
 COPY ui /ui
 RUN npm run build
 
-FROM alpine:3.15.4
+FROM alpine:3.16.2
 
 ARG EXTENSION_NAME='Ddosify'
 ARG DESCRIPTION='High-performance, open-source and simple load testing tool, written in Golang.'
@@ -23,7 +23,7 @@ ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/ddosify-icon.svg'
 ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/01_ddosify_intro.png" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/02_ddosify_load_test.png" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/03_ddosify_advanced.png" } ]'
 ARG PUBLISHER_URL='https://ddosify.com/'
 ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
-ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.8.1</li> <li>Fix _timestamp dynamic variable</li> </ul>'
+ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Add default User-Agent header (DdosifyDockerExtension/0.1.2)</li><li>Upgrade alpine version to 3.16.2</li> <li>Show errors on failure</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
 LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \
