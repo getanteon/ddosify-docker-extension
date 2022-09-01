@@ -14,6 +14,7 @@
 
 <p align="center">
 <img src="assets/ddosify_docker_extension.gif" alt="Ddosify - High-performance load testing tool quick start" />
+<video src="assets/ddosify_docker_extension_v2.mp4" />
 </p>
 
 
