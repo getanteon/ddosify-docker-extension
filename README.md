@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-<img src="assets/ddosify_docker_extension_hd_cropped.gif" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
+<img src="assets/ddosify_docker_extension_hd_cropped_comp.gif" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
 </p>
 
 
