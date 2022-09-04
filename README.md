@@ -28,7 +28,7 @@
 
 ## Installation
 
-Ddosify Docker Extension can be install using [Docker Extensions Marketplace](#docker-extensions-marketplace-recommended) and [Terminal](#terminal). For automatic upgrades, the marketplace is recommended. 
+Ddosify Docker Extension can be installed using [Docker Extensions Marketplace](#docker-extensions-marketplace-recommended) and [Terminal](#terminal). For automatic upgrades, the marketplace is recommended. 
 
 ### Docker Extensions Marketplace (Recommended)
 
