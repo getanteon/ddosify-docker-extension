@@ -5,6 +5,7 @@
 </h1>
 
 <p align="center">
+    <a href="https://github.com/ddosify/ddosify" target="_blank"><img src="https://img.shields.io/github/stars/ddosify/ddosify?&style=for-the-badge&logo=github&label=ddosify&color=orange" alt="ddosify load testing tool" /></a>
     <a href="https://hub.docker.com/extensions/ddosify/ddosify-docker-extension" target="_blank"><img src="https://img.shields.io/docker/pulls/ddosify/ddosify-docker-extension?style=for-the-badge&logo=docker&color=orange" alt="ddosify docker extension docker pull" /></a>&nbsp;
     <a href="https://hub.docker.com/r/ddosify/ddosify-docker-extension/tags" target="_blank"><img src="https://img.shields.io/docker/image-size/ddosify/ddosify-docker-extension?style=for-the-badge&logo=docker" alt="ddosify docker extension image size" /></a>&nbsp;
     <a href="https://github.com/ddosify/ddosify-docker-extension/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/LICENSE-AGPL--3.0-orange?style=for-the-badge&logo=none" alt="ddosify license" /></a>
@@ -16,12 +17,10 @@
 <img src="assets/ddosify_docker_extension_hd_cropped_comp.gif" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
 </p>
 
- <p align="center">
-    <a href="https://github.com/ddosify/ddosify" target="_blank"><img src="https://img.shields.io/github/stars/ddosify/ddosify?style=social&label=ddosify&color=orange" alt="ddosify load testing tool" /></a>
- </p>
-
 
 ## Features
+📌 **Using open-source engine** - [Ddosify](https://github.com/ddosify/ddosify) Load Generator.
+
 📌 **Protocol Agnostic** - Currently supporting *HTTP, HTTPS*. Other protocols are on the way.
 
 📌 **Different Load Types** - Test your system's limits across different load types.
