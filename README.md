@@ -16,6 +16,10 @@
 <img src="assets/ddosify_docker_extension_hd_cropped_comp.gif" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
 </p>
 
+ <p align="center">
+    <a href="https://github.com/ddosify/ddosify" target="_blank"><img src="https://img.shields.io/github/stars/ddosify/ddosify?style=social&label=ddosify&color=orange" alt="ddosify load testing tool" /></a>
+ </p>
+
 
 ## Features
 📌 **Protocol Agnostic** - Currently supporting *HTTP, HTTPS*. Other protocols are on the way.
