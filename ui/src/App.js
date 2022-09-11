@@ -268,31 +268,31 @@ function App() {
   };
 
   const openExternalLinkCloud = () => {
-    return window.ddClient.host.openExternal(
+    return ddClient.host.openExternal(
       "https://ddosify.com?utm_source=dockerextension"
     );
   };
 
   const openExternalLinkGithub = () => {
-    return window.ddClient.host.openExternal(
+    return ddClient.host.openExternal(
       "https://github.com/ddosify/ddosify?utm_source=dockerextension"
     );
   };
 
   const openExternalLinkDocs = () => {
-    return window.ddClient.host.openExternal(
+    return ddClient.host.openExternal(
       "https://docs.ddosify.com?utm_source=dockerextension"
     );
   };
 
   const openExternalLinkDiscord = () => {
-    return window.ddClient.host.openExternal(
+    return ddClient.host.openExternal(
       "https://discord.gg/9KdnrSUZQg?utm_source=dockerextension"
     );
   };
 
   const openExternalLinkDynamicVariables = () => {
-    return window.ddClient.host.openExternal(
+    return ddClient.host.openExternal(
       "https://docs.ddosify.com/extra/dynamic-variables-parameterization?utm_source=dockerextension"
     );
   };
