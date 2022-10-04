@@ -55,6 +55,20 @@ docker build --tag=ddosify/ddosify-docker-extension:latest .
 docker extension install ddosify/ddosify-docker-extension:latest
 ```
 
+Debug with Chrome Devtools and Hot reload:
+
+```bash
+docker extension dev debug ddosify/ddosify-docker-extension
+docker extension dev ui-source ddosify/ddosify-docker-extension http://localhost:3000
+cd ui && npm install && npm start
+```
+
+Reset extension configuration:
+
+```bash
+docker extension dev reset ddosify/ddosify-docker-extension
+```
+
 Remove the Ddosify Docker Extension:
 
 ```bash
