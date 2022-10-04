@@ -127,6 +127,14 @@ function App() {
     setProxyChecked(event.target.checked);
   };
 
+  const downloadReport = () =>{
+    const fileURL = window.URL.createObjectURL(res.blob());
+    let alink = document.createElement('a');
+    alink.href = fileURL;
+    alink.download = 'TestReport.pdf';
+    alink.click();
+    
+  };
   useEffect(() => {
     if (res !== "") {
       let prevBackendInfo = backendInfo;
@@ -724,6 +732,17 @@ function App() {
                 disabled={!running}
               >
                 Stop
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                size="large"
+                variant="contained"
+                color="error"
+                onClick={downloadReport}
+                disabled={!running}
+              >
+                Download Report
               </Button>
             </Grid>
           </Grid>
