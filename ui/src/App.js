@@ -27,6 +27,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
+import jsPDF from "jspdf";
 
 const protocols = [
   {
@@ -128,11 +129,10 @@ function App() {
   };
 
   const downloadReport = () =>{
-    const fileURL = window.URL.createObjectURL(res.blob());
-    let alink = document.createElement('a');
-    alink.href = fileURL;
-    alink.download = 'TestReport.pdf';
-    alink.click();
+    let doc = new jsPDF();
+    doc.text(backendInfo,10,10);
+    let dateTimeString = new Date().toLocaleDateString();
+    doc.save(`Test Report-${dateTimeString}.pdf`);
     
   };
   useEffect(() => {
@@ -250,7 +250,7 @@ function App() {
             console.error(error);
           },
           onClose(exitCode) {
-            setRunning(false);
+            setRunning(true);
             // console.log("onClose with exit code " + exitCode);
           },
         },
