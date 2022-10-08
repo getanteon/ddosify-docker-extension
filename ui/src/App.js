@@ -128,9 +128,27 @@ function App() {
     setProxyChecked(event.target.checked);
   };
 
+  const configValues =()=>{
+    let str=`
+Configuration:
+
+Target URL: ${options.target}
+Load Type: ${options.load_type}
+Duration: ${options.duration}
+Request Count: ${options.request_count}
+Timeout: ${options.timeout}
+Headers: ${options.headers}
+Basic Auth: UserName: ${options.basic_auth_username}
+            Password: ${options.basic_auth_password}
+Proxy: ${options.proxy}
+`;
+return str;
+  }
   const downloadReport = () =>{
-    let doc = new jsPDF();
-    doc.text(backendInfo,10,10);
+    let doc = new jsPDF('l', 'mm', [450, 210]);
+    let result= backendInfo.substring(backendInfo.indexOf("RESULT")-1);
+    let newStr = configValues()+result;
+    doc.text(newStr,10,10);
     let dateTimeString = new Date().toLocaleDateString();
     doc.save(`Test Report-${dateTimeString}.pdf`);
     
@@ -250,7 +268,7 @@ function App() {
             console.error(error);
           },
           onClose(exitCode) {
-            setRunning(true);
+            setRunning(false);
             // console.log("onClose with exit code " + exitCode);
           },
         },
@@ -740,7 +758,6 @@ function App() {
                 variant="contained"
                 color="error"
                 onClick={downloadReport}
-                disabled={!running}
               >
                 Download Report
               </Button>
