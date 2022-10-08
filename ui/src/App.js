@@ -82,6 +82,7 @@ function App() {
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
+  const [enableDownload,setDownload] = useState(false);
 
   const [options, setOptions] = useState({
     target: "",
@@ -269,6 +270,7 @@ return str;
           },
           onClose(exitCode) {
             setRunning(false);
+            setDownload(true);
             // console.log("onClose with exit code " + exitCode);
           },
         },
@@ -758,6 +760,7 @@ return str;
                 variant="contained"
                 color="error"
                 onClick={downloadReport}
+                disabled={!enableDownload}
               >
                 Download Report
               </Button>
