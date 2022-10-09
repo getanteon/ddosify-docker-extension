@@ -27,6 +27,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
+import jsPDF from "jspdf";
 
 const protocols = [
   {
@@ -81,6 +82,7 @@ function App() {
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
+  const [enableDownload,setDownload] = useState(false);
 
   const [options, setOptions] = useState({
     target: "",
@@ -127,6 +129,31 @@ function App() {
     setProxyChecked(event.target.checked);
   };
 
+  const configValues =()=>{
+    let str=`
+Configuration:
+
+Target URL: ${options.target}
+Load Type: ${options.load_type}
+Duration: ${options.duration}
+Request Count: ${options.request_count}
+Timeout: ${options.timeout}
+Headers: ${options.headers}
+Basic Auth: UserName: ${options.basic_auth_username}
+            Password: ${options.basic_auth_password}
+Proxy: ${options.proxy}
+`;
+return str;
+  }
+  const downloadReport = () =>{
+    let doc = new jsPDF('l', 'mm', [450, 210]);
+    let result= backendInfo.substring(backendInfo.indexOf("RESULT")-1);
+    let newStr = configValues()+result;
+    doc.text(newStr,10,10);
+    let dateTimeString = new Date().toLocaleDateString();
+    doc.save(`Test Report-${dateTimeString}.pdf`);
+    
+  };
   useEffect(() => {
     if (res !== "") {
       let prevBackendInfo = backendInfo;
@@ -243,6 +270,7 @@ function App() {
           },
           onClose(exitCode) {
             setRunning(false);
+            setDownload(true);
             // console.log("onClose with exit code " + exitCode);
           },
         },
@@ -724,6 +752,17 @@ function App() {
                 disabled={!running}
               >
                 Stop
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                size="large"
+                variant="contained"
+                color="error"
+                onClick={downloadReport}
+                disabled={!enableDownload}
+              >
+                Download Report
               </Button>
             </Grid>
           </Grid>
