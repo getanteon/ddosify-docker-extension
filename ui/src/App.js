@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -71,6 +72,46 @@ const methods = [
   },
 ];
 
+const requestHeaders = [
+  "A-IM",
+  "Accept",
+  "Accept-Charset",
+  "Accept-Encoding",
+  "Accept-Language",
+  "Accept-Datetime",
+  "Access-Control-Request-Method",
+  "Access-Control-Request-Headers",
+  "Authorization",
+  "Cache-Control",
+  "Connection",
+  "Content-Length",
+  "Content-Type",
+  "Cookie",
+  "Date",
+  "Forwarded",
+  "From",
+  "Host",
+  "If-Match",
+  "If-Modified-Since",
+  "f-None-Match",
+  "If-Range",
+  "If-Unmodified-Since",
+  "Max-Forwards",
+  "Origin",
+  "Pragma",
+  "Proxy-Authorization",
+  "Range",
+  "Referer",
+  "TE",
+  "User-Agent",
+  "Upgrade",
+  "Via",
+  "Warning",
+  "Dnt",
+  "X-Requested-With",
+  "X-CSRF-Token"
+];
+
 const client = createDockerDesktopClient();
 
 function useDockerDesktopClient() {
@@ -82,7 +123,7 @@ function App() {
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
-  const [enableDownload,setDownload] = useState(false);
+  const [enableDownload, setDownload] = useState(false);
 
   const [options, setOptions] = useState({
     target: "",
@@ -100,9 +141,9 @@ function App() {
 
   const [headers, setHeaders] = useState([{ key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" }]);
 
-  let handleHeaderChange = (i, e) => {
+  let handleHeaderChange = (index, target, value) => {
     let newHeaders = [...headers];
-    newHeaders[i][e.target.name] = e.target.value;
+    newHeaders[index][target] = value;
     setHeaders(newHeaders);
   };
 
@@ -129,30 +170,30 @@ function App() {
     setProxyChecked(event.target.checked);
   };
 
-  const configValues =()=>{
-    let str=`
-Configuration:
+  const configValues = () => {
+    let str = `
+    Configuration:
 
-Target URL: ${options.target}
-Load Type: ${options.load_type}
-Duration: ${options.duration}
-Request Count: ${options.request_count}
-Timeout: ${options.timeout}
-Headers: ${options.headers}
-Basic Auth: UserName: ${options.basic_auth_username}
-            Password: ${options.basic_auth_password}
-Proxy: ${options.proxy}
-`;
-return str;
+    Target URL: ${options.target}
+    Load Type: ${options.load_type}
+    Duration: ${options.duration}
+    Request Count: ${options.request_count}
+    Timeout: ${options.timeout}
+    Headers: ${options.headers}
+    Basic Auth: UserName: ${options.basic_auth_username}
+                Password: ${options.basic_auth_password}
+    Proxy: ${options.proxy}
+    `;
+    return str;
   }
-  const downloadReport = () =>{
+  const downloadReport = () => {
     let doc = new jsPDF('l', 'mm', [450, 210]);
-    let result= backendInfo.substring(backendInfo.indexOf("RESULT")-1);
-    let newStr = configValues()+result;
-    doc.text(newStr,10,10);
+    let result = backendInfo.substring(backendInfo.indexOf("RESULT") - 1);
+    let newStr = configValues() + result;
+    doc.text(newStr, 10, 10);
     let dateTimeString = new Date().toLocaleDateString();
     doc.save(`Test Report-${dateTimeString}.pdf`);
-    
+
   };
   useEffect(() => {
     if (res !== "") {
@@ -376,7 +417,7 @@ return str;
                     method: e.target.value,
                   }))
                 }
-                // helperText="Method"
+              // helperText="Method"
               >
                 {methods.map((method) => (
                   <MenuItem key={method.value} value={method.value}>
@@ -398,7 +439,7 @@ return str;
                       protocol: e.target.value,
                     }))
                   }
-                  // helperText="Protocol"
+                // helperText="Protocol"
                 >
                   {protocols.map((protocol) => (
                     <MenuItem key={protocol.value} value={protocol.value}>
@@ -563,27 +604,32 @@ return str;
                         style={{ marginBottom: "5px" }}
                       >
                         <Grid item xs={5.5}>
-                          <TextField
-                            style={{ width: "100%" }}
-                            size="small"
-                            name="key"
-                            required
-                            variant="outlined"
-                            placeholder="Key"
-                            value={element.key || ""}
-                            onChange={(e) => handleHeaderChange(index, e)}
+                          <Autocomplete
+                            freeSolo
+                            disablePortal
+                            sx={{ width: "95%" }}
+                            options={requestHeaders}
+                            value={element.key}
+                            onChange={(event, value) => {
+                              handleHeaderChange(index, 'key', value);
+                            }}
+                            renderInput={(params) =>
+                              <TextField {...params}
+                                placeholder="Key"
+                              />}
                           />
                         </Grid>
                         <Grid item xs={5.5}>
                           <TextField
-                            style={{ width: "100%" }}
-                            size="small"
+                            style={{ width: "95%" }}
                             name="value"
                             required
                             variant="outlined"
                             placeholder="Value"
-                            value={element.value || ""}
-                            onChange={(e) => handleHeaderChange(index, e)}
+                            value={element.value ?? ""}
+                            onChange={(event) => {
+                              handleHeaderChange(index, 'value', event.target.value);
+                            }}
                           />
                         </Grid>
                         <Grid item xs={1}>
