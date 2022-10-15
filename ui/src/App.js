@@ -600,14 +600,16 @@ function App() {
                       <Grid
                         item
                         container
+                        justifyContent="center"
+                        alignItems="center"
                         key={index}
-                        style={{ marginBottom: "5px" }}
+                        style={{ marginBottom: "15px" }}
                       >
                         <Grid item xs={5.5}>
                           <Autocomplete
                             freeSolo
                             disablePortal
-                            sx={{ width: "95%" }}
+                            sx={{ width: "98%" }}
                             options={requestHeaders}
                             value={element.key}
                             onChange={(event, value) => {
@@ -621,7 +623,7 @@ function App() {
                         </Grid>
                         <Grid item xs={5.5}>
                           <TextField
-                            style={{ width: "95%" }}
+                            style={{ width: "98%" }}
                             name="value"
                             required
                             variant="outlined"
