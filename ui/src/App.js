@@ -129,7 +129,12 @@ function App() {
   const [running, setRunning] = useState(false);
   const [enableDownload, setDownload] = useState(false);
   const [dynamicMatch, setDynamicMatch] = useState([]);
-  const dynamicRegex = /({{[^{}]*?}})/;
+
+  const regex = {
+    option: /({+[^{]*?$)/,
+    filter: /{([^{}]*?$)/,
+    dynamic: /({{[^{}]*?}})/
+  }
 
   const [options, setOptions] = useState({
     target: "",
@@ -151,14 +156,14 @@ function App() {
 
     if (type !== 'reset') {
 
-      const splitInput = value.split(dynamicRegex)
+      const splitInput = value.split(regex.dynamic)
         .filter((key) => key !== '');
 
       const dynamicInput = splitInput.map((key) => {
 
         return {
           name: key.trim(),
-          color: key.match(dynamicRegex) ? '#00cfe8' : '',
+          color: key.match(regex.dynamic) ? '#00cfe8' : '',
         }
 
       });
@@ -169,7 +174,7 @@ function App() {
     }
 
     if (!value) {
-      setDynamicMatch(null);
+      setDynamicMatch([]);
     }
 
   };
@@ -178,17 +183,17 @@ function App() {
 
     if (type === 'selectOption') {
 
-      const newOption = options.target.replace(/{_*$/, '')
+      const newOption = options.target.replace(regex.option, '')
         .concat('{{' + value + '}}');
 
-      const splitOption = newOption.split(dynamicRegex)
+      const splitOption = newOption.split(regex.dynamic)
         .filter((key) => key !== '');
 
       const dynamicOption = splitOption.map((key) => {
 
         return {
           name: key.trim(),
-          color: key.match(dynamicRegex) ? '#00cfe8' : '',
+          color: key.match(regex.dynamic) ? '#00cfe8' : '',
         }
 
       });
@@ -206,8 +211,11 @@ function App() {
 
     for (const key in dynamicMatch) {
 
-      const match = dynamicMatch[key];
-      filterValue = /[^{]*$/.exec(match.name)[0];
+      const matchOption = dynamicMatch[key];
+
+      if (matchOption.name.match(regex.filter)) {
+        filterValue = matchOption.name.match(regex.filter)[1];
+      }
 
     };
 
