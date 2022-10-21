@@ -20,6 +20,7 @@ import {
   Box,
   Stack,
 } from "@mui/material";
+
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import React, { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 import jsPDF from "jspdf";
+import { dynamicVarsList } from "./dynamicVarsList";
 
 const protocols = [
   {
@@ -119,11 +121,20 @@ function useDockerDesktopClient() {
 }
 
 function App() {
+
   const ddClient = useDockerDesktopClient();
+  const { varsList } = dynamicVarsList();
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
   const [enableDownload, setDownload] = useState(false);
+  const [dynamicMatch, setDynamicMatch] = useState([]);
+
+  const regex = {
+    option: /({+[^{]*?$)/,
+    filter: /{([^{}]*?$)/,
+    dynamic: /({{[^{}]*?}})/
+  }
 
   const [options, setOptions] = useState({
     target: "",
@@ -141,9 +152,80 @@ function App() {
 
   const [headers, setHeaders] = useState([{ key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" }]);
 
+  const handleTargetInput = (value, type) => {
+
+    if (type !== 'reset') {
+
+      const splitInput = value.split(regex.dynamic)
+        .filter((key) => key !== '');
+
+      const dynamicInput = splitInput.map((key) => {
+
+        return {
+          name: key.trim(),
+          color: key.match(regex.dynamic) ? '#00cfe8' : '',
+        }
+
+      });
+
+      setDynamicMatch(dynamicInput);
+      setOptions({ ...options, target: splitInput.join('') ?? '' });
+
+    }
+
+    if (!value) {
+      setDynamicMatch([]);
+    }
+
+  };
+
+  const handleTargetOption = (value, type) => {
+
+    if (type === 'selectOption') {
+
+      const newOption = options.target.replace(regex.option, '')
+        .concat('{{' + value + '}}');
+
+      const splitOption = newOption.split(regex.dynamic)
+        .filter((key) => key !== '');
+
+      const dynamicOption = splitOption.map((key) => {
+
+        return {
+          name: key.trim(),
+          color: key.match(regex.dynamic) ? '#00cfe8' : '',
+        }
+
+      });
+
+      setDynamicMatch(dynamicOption);
+      setOptions({ ...options, target: splitOption.join('') ?? '' });
+
+    }
+
+  };
+
+  const filterOptions = (options, state) => {
+
+    let filterValue = null;
+
+    for (const key in dynamicMatch) {
+
+      const matchOption = dynamicMatch[key];
+
+      if (matchOption.name.match(regex.filter)) {
+        filterValue = matchOption.name.match(regex.filter)[1];
+      }
+
+    };
+
+    return options.filter((option) => option.includes(filterValue));
+
+  };
+
   let handleHeaderChange = (index, target, value) => {
     let newHeaders = [...headers];
-    newHeaders[index][target] = value;
+    newHeaders[index][target] = value ?? '';
     setHeaders(newHeaders);
   };
 
@@ -448,22 +530,46 @@ function App() {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={10.4}>
-                <TextField
-                  error={options?.target === ""}
-                  style={{ width: "100%" }}
-                  required
-                  // variant="filled"
-                  placeholder="example.com"
-                  helperText="Target URL"
-                  // label="Target URL"
-                  value={options?.target}
-                  onChange={(e) =>
-                    setOptions((prevState) => ({
-                      ...prevState,
-                      target: e.target.value,
-                    }))
-                  }
+              <Grid item xs={10.4} sx={{ position: "relative" }}>
+                <Autocomplete
+                  freeSolo
+                  sx={{ width: "100%", position: 'relative' }}
+                  options={varsList}
+                  filterOptions={(options, state) => filterOptions(options, state)}
+                  value={options.target ?? ''}
+                  onChange={(event, value, type) => {
+                    handleTargetOption(value, type);
+                  }}
+                  inputValue={options.target ?? ''}
+                  onInputChange={(event, value, type) => {
+                    handleTargetInput(value, type);
+                  }}
+                  renderInput={(params) => (
+                    <>
+                      <TextField {...params}
+                        sx={{ WebkitTextFillColor: options.target ? 'transparent' : '' }}
+                        type="text"
+                        error={options.target === ""}
+                        placeholder="example.com"
+                        helperText="Target URL"
+                      />
+                      <Box {...params} component="div" sx={{
+                        position: "absolute",
+                        left: 0,
+                        top: '25%',
+                        paddingLeft: "15.5px",
+                        fontSize: "14px",
+                        lineHeight: 1.1,
+                        pointerEvents: 'none'
+                      }}>
+                        {dynamicMatch?.map((match, matchIndex) => (
+                          <Box {...params} component="span" key={matchIndex} sx={{ color: `${match.color}` }}>
+                            {match.name}
+                          </Box>
+                        ))}
+                      </Box>
+                    </>
+                  )}
                 />
               </Grid>
             </Grid>
@@ -611,8 +717,8 @@ function App() {
                             disablePortal
                             sx={{ width: "98%" }}
                             options={requestHeaders}
-                            value={element.key}
-                            onChange={(event, value) => {
+                            inputValue={element.key}
+                            onInputChange={(event, value) => {
                               handleHeaderChange(index, 'key', value);
                             }}
                             renderInput={(params) =>
