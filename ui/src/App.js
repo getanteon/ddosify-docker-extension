@@ -1,5 +1,5 @@
-import { DockerMuiThemeProvider } from "@docker/docker-mui-theme";
-import { createDockerDesktopClient } from "@docker/extension-api-client";
+import { DockerMuiThemeProvider } from '@docker/docker-mui-theme';
+import { createDockerDesktopClient } from '@docker/extension-api-client';
 import {
   Accordion,
   AccordionDetails,
@@ -19,99 +19,99 @@ import {
   Checkbox,
   Box,
   Stack,
-} from "@mui/material";
+} from '@mui/material';
 
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MenuItem from "@mui/material/MenuItem";
-import jsPDF from "jspdf";
-import { dynamicVarsList } from "./dynamicVarsList";
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import React, { useEffect, useState } from 'react';
+import './App.css';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MenuItem from '@mui/material/MenuItem';
+import jsPDF from 'jspdf';
+import AutoSuggestionField from './components/AutoSuggestionField';
 
 const protocols = [
   {
-    value: "https",
-    label: "HTTPS",
+    value: 'https',
+    label: 'HTTPS',
   },
   {
-    value: "http",
-    label: "HTTP",
+    value: 'http',
+    label: 'HTTP',
   },
 ];
 
 const methods = [
   {
-    value: "GET",
-    label: "GET",
+    value: 'GET',
+    label: 'GET',
   },
   {
-    value: "POST",
-    label: "POST",
+    value: 'POST',
+    label: 'POST',
   },
   {
-    value: "PUT",
-    label: "PUT",
+    value: 'PUT',
+    label: 'PUT',
   },
   {
-    value: "PATCH",
-    label: "PATCH",
+    value: 'PATCH',
+    label: 'PATCH',
   },
   {
-    value: "DELETE",
-    label: "DELETE",
+    value: 'DELETE',
+    label: 'DELETE',
   },
   {
-    value: "HEAD",
-    label: "HEAD",
+    value: 'HEAD',
+    label: 'HEAD',
   },
   {
-    value: "OPTIONS",
-    label: "OPTIONS",
+    value: 'OPTIONS',
+    label: 'OPTIONS',
   },
 ];
 
 const requestHeaders = [
-  "A-IM",
-  "Accept",
-  "Accept-Charset",
-  "Accept-Encoding",
-  "Accept-Language",
-  "Accept-Datetime",
-  "Access-Control-Request-Method",
-  "Access-Control-Request-Headers",
-  "Authorization",
-  "Cache-Control",
-  "Connection",
-  "Content-Length",
-  "Content-Type",
-  "Cookie",
-  "Date",
-  "Forwarded",
-  "From",
-  "Host",
-  "If-Match",
-  "If-Modified-Since",
-  "f-None-Match",
-  "If-Range",
-  "If-Unmodified-Since",
-  "Max-Forwards",
-  "Origin",
-  "Pragma",
-  "Proxy-Authorization",
-  "Range",
-  "Referer",
-  "TE",
-  "User-Agent",
-  "Upgrade",
-  "Via",
-  "Warning",
-  "Dnt",
-  "X-Requested-With",
-  "X-CSRF-Token"
+  'A-IM',
+  'Accept',
+  'Accept-Charset',
+  'Accept-Encoding',
+  'Accept-Language',
+  'Accept-Datetime',
+  'Access-Control-Request-Method',
+  'Access-Control-Request-Headers',
+  'Authorization',
+  'Cache-Control',
+  'Connection',
+  'Content-Length',
+  'Content-Type',
+  'Cookie',
+  'Date',
+  'Forwarded',
+  'From',
+  'Host',
+  'If-Match',
+  'If-Modified-Since',
+  'f-None-Match',
+  'If-Range',
+  'If-Unmodified-Since',
+  'Max-Forwards',
+  'Origin',
+  'Pragma',
+  'Proxy-Authorization',
+  'Range',
+  'Referer',
+  'TE',
+  'User-Agent',
+  'Upgrade',
+  'Via',
+  'Warning',
+  'Dnt',
+  'X-Requested-With',
+  'X-CSRF-Token',
 ];
 
 const client = createDockerDesktopClient();
@@ -121,107 +121,29 @@ function useDockerDesktopClient() {
 }
 
 function App() {
-
   const ddClient = useDockerDesktopClient();
-  const { varsList } = dynamicVarsList();
-  const [backendInfo, setBackendInfo] = useState("");
-  const [res, setRes] = useState("");
+  const [backendInfo, setBackendInfo] = useState('');
+  const [res, setRes] = useState('');
   const [running, setRunning] = useState(false);
   const [enableDownload, setDownload] = useState(false);
-  const [dynamicMatch, setDynamicMatch] = useState([]);
-
-  const regex = {
-    option: /({+[^{]*?$)/,
-    filter: /{([^{}]*?$)/,
-    dynamic: /({{[^{}]*?}})/
-  }
 
   const [options, setOptions] = useState({
-    target: "",
-    protocol: "http",
-    method: "GET",
+    target: '',
+    protocol: 'http',
+    method: 'GET',
     duration: 10,
     request_count: 100,
-    load_type: "linear",
+    load_type: 'linear',
     timeout: 5,
-    body: "",
-    basic_auth_username: "",
-    basic_auth_password: "",
-    proxy: "",
+    body: '',
+    basic_auth_username: '',
+    basic_auth_password: '',
+    proxy: '',
   });
 
-  const [headers, setHeaders] = useState([{ key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" }]);
-
-  const handleTargetInput = (value, type) => {
-
-    if (type !== 'reset') {
-
-      const splitInput = value.split(regex.dynamic)
-        .filter((key) => key !== '');
-
-      const dynamicInput = splitInput.map((key) => {
-
-        return {
-          name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
-        }
-
-      });
-
-      setDynamicMatch(dynamicInput);
-      setOptions({ ...options, target: splitInput.join('') ?? '' });
-
-    }
-
-    if (!value) {
-      setDynamicMatch([]);
-    }
-
-  };
-
-  const handleTargetOption = (value, type) => {
-
-    if (type === 'selectOption') {
-
-      const newOption = options.target.replace(regex.option, '')
-        .concat('{{' + value + '}}');
-
-      const splitOption = newOption.split(regex.dynamic)
-        .filter((key) => key !== '');
-
-      const dynamicOption = splitOption.map((key) => {
-
-        return {
-          name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
-        }
-
-      });
-
-      setDynamicMatch(dynamicOption);
-      setOptions({ ...options, target: splitOption.join('') ?? '' });
-
-    }
-
-  };
-
-  const filterOptions = (options, state) => {
-
-    let filterValue = null;
-
-    for (const key in dynamicMatch) {
-
-      const matchOption = dynamicMatch[key];
-
-      if (matchOption.name.match(regex.filter)) {
-        filterValue = matchOption.name.match(regex.filter)[1];
-      }
-
-    };
-
-    return options.filter((option) => option.includes(filterValue));
-
-  };
+  const [headers, setHeaders] = useState([
+    { key: 'User-Agent', value: 'DdosifyDockerExtension/0.1.2' },
+  ]);
 
   let handleHeaderChange = (index, target, value) => {
     let newHeaders = [...headers];
@@ -230,7 +152,7 @@ function App() {
   };
 
   let addHeader = () => {
-    setHeaders([...headers, { key: "", value: "" }]);
+    setHeaders([...headers, { key: '', value: '' }]);
     // console.log(headers);
   };
 
@@ -267,116 +189,112 @@ function App() {
     Proxy: ${options.proxy}
     `;
     return str;
-  }
+  };
   const downloadReport = () => {
     let doc = new jsPDF('l', 'mm', [450, 210]);
-    let result = backendInfo.substring(backendInfo.indexOf("RESULT") - 1);
+    let result = backendInfo.substring(backendInfo.indexOf('RESULT') - 1);
     let newStr = configValues() + result;
     doc.text(newStr, 10, 10);
     let dateTimeString = new Date().toLocaleDateString();
     doc.save(`Test Report-${dateTimeString}.pdf`);
-
   };
   useEffect(() => {
-    if (res !== "") {
+    if (res !== '') {
       let prevBackendInfo = backendInfo;
-      if (res.includes("Initializing")) {
+      if (res.includes('Initializing')) {
         // New test, clear output
-        prevBackendInfo = "";
+        prevBackendInfo = '';
       }
       setBackendInfo(prevBackendInfo + res);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [res]);
 
   useEffect(() => {
     if (running) {
       if (options.request_count > 5000) {
         ddClient.desktopUI.toast.error(
-          "Request count is limited to 5000, for more you can use Ddosify Cloud."
+          'Request count is limited to 5000, for more you can use Ddosify Cloud.'
         );
         setRunning(false);
         return;
       }
       if (options.request_count <= 0) {
-        ddClient.desktopUI.toast.error(
-          "Request count must be positive"
-        );
+        ddClient.desktopUI.toast.error('Request count must be positive');
         setRunning(false);
         return;
       }
 
       if (options.duration > 100) {
         ddClient.desktopUI.toast.error(
-          "Duration is limited to 100 seconds, for more you can use Ddosify Cloud."
+          'Duration is limited to 100 seconds, for more you can use Ddosify Cloud.'
         );
         setRunning(false);
         return;
       }
       if (options.duration <= 0) {
-        ddClient.desktopUI.toast.error(
-          "Duration must be positive"
-        );
+        ddClient.desktopUI.toast.error('Duration must be positive');
         setRunning(false);
         return;
       }
 
-      if (options.target === "") {
-        ddClient.desktopUI.toast.warning("Please enter a target URL");
+      if (options.target === '') {
+        ddClient.desktopUI.toast.warning('Please enter a target URL');
         setRunning(false);
         return;
       }
 
       var args = [
-        "-t",
-        options.protocol + "://" + options.target,
-        "-n",
+        '-t',
+        options.protocol + '://' + options.target,
+        '-n',
         options.request_count,
-        "-d",
+        '-d',
         options.duration,
-        "-m",
+        '-m',
         options.method,
-        "-l",
+        '-l',
         options.load_type,
-        "-T",
+        '-T',
         options.timeout,
       ];
       for (let index in headers) {
         var element = headers[index];
-        if (element.key === "") {
-          ddClient.desktopUI.toast.warning("Header key can not be empty");
+        if (element.key === '') {
+          ddClient.desktopUI.toast.warning('Header key can not be empty');
           setRunning(false);
           return;
         }
-        if (element.value === "") {
-          ddClient.desktopUI.toast.warning("Header value can not be empty");
+        if (element.value === '') {
+          ddClient.desktopUI.toast.warning('Header value can not be empty');
           setRunning(false);
           return;
         }
-        args.push("-h", element.key + ":" + element.value);
+        args.push('-h', element.key + ':' + element.value);
       }
 
-      if (options.body !== "") {
-        args.push("-b", options.body);
+      if (options.body !== '') {
+        args.push('-b', options.body);
       }
 
       if (
-        options.basic_auth_username !== "" &&
-        options.basic_auth_password !== "" &&
+        options.basic_auth_username !== '' &&
+        options.basic_auth_password !== '' &&
         basicAuthChecked
       ) {
         args.push(
-          "-a",
-          options.basic_auth_username + ":" + options.basic_auth_password
+          '-a',
+          options.basic_auth_username + ':' + options.basic_auth_password
         );
       }
 
-      if (options.proxy !== "" && proxyChecked) {
-        args.push("-P", options.proxy);
+      if (options.proxy !== '' && proxyChecked) {
+        args.push('-P', options.proxy);
       }
 
       // console.log(args);
 
-      ddClient.extension.vm.cli.exec("./ddosify", args, {
+      ddClient.extension.vm.cli.exec('./ddosify', args, {
         stream: {
           onOutput(data) {
             if (data?.stdout) {
@@ -399,52 +317,53 @@ function App() {
         },
       });
     } else {
-      setRes("");
+      setRes('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running]);
 
   const stopDdosify = async () => {
-    ddClient.extension.vm.cli.exec("killall", ["-SIGINT", "ddosify"]);
+    ddClient.extension.vm.cli.exec('killall', ['-SIGINT', 'ddosify']);
   };
 
   const clearEmoji = (str) => {
     return str
-      .replace("â\x9A\x99ï¸\x8F  ", "⚙️ ")
-      .replace("ð\x9F\x94¥ ", "🔥 ")
-      .replace("ð\x9F\x9B\x91 ", "")
-      .replace("â\x9C\x94ï¸\x8F  ", "✅ ")
-      .replace("â\x9D\x8C ", "❌ ")
-      .replace("â\x8F±ï¸\x8F  ", "⏱️ ")
-      .replace("CTRL+C to gracefully stop.", "");
+      .replace('â\x9A\x99ï¸\x8F  ', '⚙️ ')
+      .replace('ð\x9F\x94¥ ', '🔥 ')
+      .replace('ð\x9F\x9B\x91 ', '')
+      .replace('â\x9C\x94ï¸\x8F  ', '✅ ')
+      .replace('â\x9D\x8C ', '❌ ')
+      .replace('â\x8F±ï¸\x8F  ', '⏱️ ')
+      .replace('CTRL+C to gracefully stop.', '');
   };
 
   const openExternalLinkCloud = () => {
     return ddClient.host.openExternal(
-      "https://ddosify.com?utm_source=dockerextension"
+      'https://ddosify.com?utm_source=dockerextension'
     );
   };
 
   const openExternalLinkGithub = () => {
     return ddClient.host.openExternal(
-      "https://github.com/ddosify/ddosify?utm_source=dockerextension"
+      'https://github.com/ddosify/ddosify?utm_source=dockerextension'
     );
   };
 
   const openExternalLinkDocs = () => {
     return ddClient.host.openExternal(
-      "https://docs.ddosify.com?utm_source=dockerextension"
+      'https://docs.ddosify.com?utm_source=dockerextension'
     );
   };
 
   const openExternalLinkDiscord = () => {
     return ddClient.host.openExternal(
-      "https://discord.gg/9KdnrSUZQg?utm_source=dockerextension"
+      'https://discord.gg/9KdnrSUZQg?utm_source=dockerextension'
     );
   };
 
   const openExternalLinkDynamicVariables = () => {
     return ddClient.host.openExternal(
-      "https://docs.ddosify.com/extra/dynamic-variables-parameterization?utm_source=dockerextension"
+      'https://docs.ddosify.com/extra/dynamic-variables-parameterization?utm_source=dockerextension'
     );
   };
 
@@ -456,31 +375,32 @@ function App() {
           container
           columnSpacing={{ xs: 1 }}
           rowSpacing={4}
-          style={{ padding: "4rem" }}
+          style={{ padding: '4rem' }}
         >
           <Grid container item>
             <Grid container item>
               <img
+                alt="ddosify logo"
                 height="100px"
                 src="https://ddosify-assets-analytics.s3.us-east-2.amazonaws.com/ddosify-docker-logo.svg"
                 style={{
-                  display: "block",
-                  marginRight: "auto",
-                  marginLeft: "auto",
+                  display: 'block',
+                  marginRight: 'auto',
+                  marginLeft: 'auto',
                 }}
               />
             </Grid>
             <Grid container item>
               <Typography
                 style={{
-                  display: "block",
-                  marginRight: "auto",
-                  marginLeft: "auto",
+                  display: 'block',
+                  marginRight: 'auto',
+                  marginLeft: 'auto',
                 }}
               >
                 High-performance, open-source and simple load testing tool. For
-                no-code, distributed and geo-targeted load testing you can use{" "}
-                {"  "}
+                no-code, distributed and geo-targeted load testing you can use{' '}
+                {'  '}
                 <Link href="#" onClick={openExternalLinkCloud}>
                   Ddosify Cloud.
                 </Link>
@@ -490,7 +410,7 @@ function App() {
           <Grid container item>
             <Grid item xs={1.6}>
               <TextField
-                style={{ width: "100%", textAlign: "left" }}
+                style={{ width: '100%', textAlign: 'left' }}
                 select
                 value={options?.method}
                 onChange={(e) =>
@@ -499,7 +419,7 @@ function App() {
                     method: e.target.value,
                   }))
                 }
-              // helperText="Method"
+                // helperText="Method"
               >
                 {methods.map((method) => (
                   <MenuItem key={method.value} value={method.value}>
@@ -512,7 +432,7 @@ function App() {
             <Grid item xs={10.2} container>
               <Grid item xs={1.6}>
                 <TextField
-                  style={{ width: "100%", textAlign: "left" }}
+                  style={{ width: '100%', textAlign: 'left' }}
                   select
                   value={options?.protocol}
                   onChange={(e) =>
@@ -521,7 +441,7 @@ function App() {
                       protocol: e.target.value,
                     }))
                   }
-                // helperText="Protocol"
+                  // helperText="Protocol"
                 >
                   {protocols.map((protocol) => (
                     <MenuItem key={protocol.value} value={protocol.value}>
@@ -530,46 +450,13 @@ function App() {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={10.4} sx={{ position: "relative" }}>
-                <Autocomplete
-                  freeSolo
-                  sx={{ width: "100%", position: 'relative' }}
-                  options={varsList}
-                  filterOptions={(options, state) => filterOptions(options, state)}
+              <Grid item xs={10.4} sx={{ position: 'relative' }}>
+                <AutoSuggestionField
                   value={options.target ?? ''}
-                  onChange={(event, value, type) => {
-                    handleTargetOption(value, type);
-                  }}
-                  inputValue={options.target ?? ''}
-                  onInputChange={(event, value, type) => {
-                    handleTargetInput(value, type);
-                  }}
-                  renderInput={(params) => (
-                    <>
-                      <TextField {...params}
-                        sx={{ WebkitTextFillColor: options.target ? 'transparent' : '' }}
-                        type="text"
-                        error={options.target === ""}
-                        placeholder="example.com"
-                        helperText="Target URL"
-                      />
-                      <Box {...params} component="div" sx={{
-                        position: "absolute",
-                        left: 0,
-                        top: '25%',
-                        paddingLeft: "15.5px",
-                        fontSize: "14px",
-                        lineHeight: 1.1,
-                        pointerEvents: 'none'
-                      }}>
-                        {dynamicMatch?.map((match, matchIndex) => (
-                          <Box {...params} component="span" key={matchIndex} sx={{ color: `${match.color}` }}>
-                            {match.name}
-                          </Box>
-                        ))}
-                      </Box>
-                    </>
-                  )}
+                  onChange={(val) => setOptions({ ...options, target: val })}
+                  error={options.target === ''}
+                  placeholder="example.com"
+                  helperText="Target URL"
                 />
               </Grid>
             </Grid>
@@ -578,7 +465,9 @@ function App() {
           <Grid item container columnSpacing={{ xs: 2 }}>
             <Grid item>
               <TextField
-                error={options?.request_count === "" || options?.request_count <= 0}
+                error={
+                  options?.request_count === '' || options?.request_count <= 0
+                }
                 required
                 variant="filled"
                 label="Request Count"
@@ -594,7 +483,7 @@ function App() {
             </Grid>
             <Grid item>
               <TextField
-                error={options?.duration === "" || options?.duration <= 0}
+                error={options?.duration === '' || options?.duration <= 0}
                 required
                 variant="filled"
                 label="Duration (s)"
@@ -610,7 +499,7 @@ function App() {
             </Grid>
             <Grid item>
               <FormControl>
-                <FormLabel style={{ textAlign: "left" }} required>
+                <FormLabel style={{ textAlign: 'left' }} required>
                   Load Type
                 </FormLabel>
                 <RadioGroup
@@ -646,7 +535,7 @@ function App() {
           </Grid>
 
           <Grid item container>
-            <Accordion style={{ width: "100%" }}>
+            <Accordion style={{ width: '100%' }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -660,7 +549,7 @@ function App() {
                     <Grid item container columnSpacing={{ xs: 2 }}>
                       <Grid item xs={2}>
                         <TextField
-                          style={{ width: "100%" }}
+                          style={{ width: '100%' }}
                           required
                           variant="filled"
                           label="Timeout"
@@ -676,7 +565,7 @@ function App() {
                       </Grid>
                       <Grid item xs={10}>
                         <TextField
-                          style={{ width: "100%" }}
+                          style={{ width: '100%' }}
                           variant="filled"
                           label="Body"
                           value={options?.body}
@@ -695,7 +584,7 @@ function App() {
                 <Card variant="outlined">
                   <CardContent>
                     <Typography
-                      textAlign={"left"}
+                      textAlign={'left'}
                       gutterBottom
                       variant="h6"
                       component="div"
@@ -709,36 +598,50 @@ function App() {
                         justifyContent="center"
                         alignItems="center"
                         key={index}
-                        style={{ marginBottom: "15px" }}
+                        style={{ marginBottom: '15px' }}
                       >
                         <Grid item xs={5.5}>
                           <Autocomplete
                             freeSolo
                             disablePortal
-                            sx={{ width: "98%" }}
+                            sx={{ width: '98%' }}
                             options={requestHeaders}
                             inputValue={element.key}
                             onInputChange={(event, value) => {
                               handleHeaderChange(index, 'key', value);
                             }}
-                            renderInput={(params) =>
-                              <TextField {...params}
-                                placeholder="Key"
-                              />}
+                            renderInput={(params) => (
+                              <TextField {...params} placeholder="Key" />
+                            )}
                           />
                         </Grid>
                         <Grid item xs={5.5}>
-                          <TextField
-                            style={{ width: "98%" }}
+                          <AutoSuggestionField
+                            name="value"
+                            placeholder="Value"
+                            value={element.value ?? ''}
+                            onChange={(val) => {
+                              handleHeaderChange(index, 'value', val);
+                            }}
+                            boxStyle={{
+                              top: '35%',
+                            }}
+                          />
+                          {/* <TextField
+                            style={{ width: '98%' }}
                             name="value"
                             required
                             variant="outlined"
                             placeholder="Value"
-                            value={element.value ?? ""}
+                            value={element.value ?? ''}
                             onChange={(event) => {
-                              handleHeaderChange(index, 'value', event.target.value);
+                              handleHeaderChange(
+                                index,
+                                'value',
+                                event.target.value
+                              );
                             }}
-                          />
+                          /> */}
                         </Grid>
                         <Grid item xs={1}>
                           <IconButton onClick={() => removeHeader(index)}>
@@ -749,7 +652,7 @@ function App() {
                     ))}
                     <Grid item container>
                       <Button
-                        style={{ marginTop: "10px" }}
+                        style={{ marginTop: '10px' }}
                         variant="outlined"
                         onClick={() => addHeader()}
                       >
@@ -763,7 +666,7 @@ function App() {
                   <CardContent>
                     <Grid item container>
                       <FormControlLabel
-                        style={{ textAlign: "left", display: "flex" }}
+                        style={{ textAlign: 'left', display: 'flex' }}
                         control={
                           <Checkbox
                             checked={basicAuthChecked}
@@ -776,28 +679,28 @@ function App() {
                     <Grid
                       item
                       container
-                      visibility={basicAuthChecked ? "initial" : "hidden"}
-                      style={{ marginTop: "10px" }}
+                      visibility={basicAuthChecked ? 'initial' : 'hidden'}
+                      style={{ marginTop: '10px' }}
                     >
                       <Grid item xs={6}>
-                        <TextField
-                          style={{ width: "100%" }}
-                          size="small"
-                          required
-                          variant="outlined"
+                        <AutoSuggestionField
                           placeholder="Username"
-                          value={options?.basic_auth_username}
-                          onChange={(e) =>
+                          size="small"
+                          value={options?.basic_auth_username ?? ''}
+                          onChange={(val) => {
                             setOptions((prevState) => ({
                               ...prevState,
-                              basic_auth_username: e.target.value,
-                            }))
-                          }
+                              basic_auth_username: val,
+                            }));
+                          }}
+                          boxStyle={{
+                            paddingLeft: '10px',
+                          }}
                         />
                       </Grid>
                       <Grid item xs={6}>
                         <TextField
-                          style={{ width: "100%" }}
+                          style={{ width: '100%' }}
                           size="small"
                           required
                           type="password"
@@ -819,7 +722,7 @@ function App() {
                   <CardContent>
                     <Grid item container>
                       <FormControlLabel
-                        style={{ textAlign: "left", display: "flex" }}
+                        style={{ textAlign: 'left', display: 'flex' }}
                         control={
                           <Checkbox
                             checked={proxyChecked}
@@ -832,12 +735,12 @@ function App() {
                     <Grid
                       item
                       container
-                      visibility={proxyChecked ? "initial" : "hidden"}
-                      style={{ marginTop: "10px" }}
+                      visibility={proxyChecked ? 'initial' : 'hidden'}
+                      style={{ marginTop: '10px' }}
                     >
                       <Grid item xs={12}>
                         <TextField
-                          style={{ width: "100%" }}
+                          style={{ width: '100%' }}
                           size="small"
                           required
                           variant="outlined"
@@ -866,12 +769,12 @@ function App() {
           >
             <Grid item>
               <Typography>
-                <span style={{ color: "#aaa49f" }}>
-                  Tip: Use{" "}
-                  <span style={{ color: "#00cfe8" }}>
-                    {"{{_variableName}}"}
-                  </span>{" "}
-                  format to inject dynamic variables on inputs. {"  "}
+                <span style={{ color: '#aaa49f' }}>
+                  Tip: Use{' '}
+                  <span style={{ color: '#00cfe8' }}>
+                    {'{{_variableName}}'}
+                  </span>{' '}
+                  format to inject dynamic variables on inputs. {'  '}
                   <Link href="#" onClick={openExternalLinkDynamicVariables}>
                     Learn more →
                   </Link>
@@ -885,7 +788,7 @@ function App() {
             container
             columnSpacing={{ xs: 2 }}
             justifyContent="flex-start"
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: '1rem' }}
           >
             <Grid item>
               <Button
@@ -923,15 +826,15 @@ function App() {
           <Grid
             item
             container
-            style={{ marginTop: "1rem" }}
-            visibility={backendInfo === "" ? "hidden" : "initial"}
+            style={{ marginTop: '1rem' }}
+            visibility={backendInfo === '' ? 'hidden' : 'initial'}
           >
             <pre
               style={{
-                textAlign: "left",
-                border: "3px solid #999",
-                padding: "20px",
-                width: "100%",
+                textAlign: 'left',
+                border: '3px solid #999',
+                padding: '20px',
+                width: '100%',
               }}
             >
               {backendInfo}
@@ -939,43 +842,43 @@ function App() {
           </Grid>
         </Grid>
 
-        <Grid container style={{ padding: "4rem", width: "100%" }}>
+        <Grid container style={{ padding: '4rem', width: '100%' }}>
           <Box
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             sx={{ py: 5, px: 3, borderRadius: 5, boxShadow: 6 }}
           >
             <Stack
               direction="row"
-              sx={{ display: "flex", justifyContent: "space-between" }}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Typography
                   style={{
-                    display: "block",
-                    marginRight: "auto",
-                    marginLeft: "auto",
+                    display: 'block',
+                    marginRight: 'auto',
+                    marginLeft: 'auto',
                   }}
                 >
-                  More? Check out the {"  "}
+                  More? Check out the {'  '}
                   <Link href="#" onClick={openExternalLinkGithub}>
                     Github
                   </Link>
-                  {"  "}
-                  open-source repository, {"  "}
+                  {'  '}
+                  open-source repository, {'  '}
                   <Link href="#" onClick={openExternalLinkDocs}>
                     Documentation
                   </Link>
-                  {"  "} or join our {"  "}
+                  {'  '} or join our {'  '}
                   <Link href="#" onClick={openExternalLinkDiscord}>
                     Discord Server
                   </Link>
-                  {"  "} for issues, feature requests and feedbacks.
+                  {'  '} for issues, feature requests and feedbacks.
                 </Typography>
               </Box>
             </Stack>
