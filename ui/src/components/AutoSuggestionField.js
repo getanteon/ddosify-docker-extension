@@ -1,6 +1,6 @@
-import { Autocomplete, TextField, Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { dynamicVarsList } from '../dynamicVarsList';
+import { Autocomplete, TextField, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { dynamicVarsList } from "../dynamicVarsList";
 
 const regex = {
   option: /({+[^{]*?$)/,
@@ -29,40 +29,40 @@ const AutoSuggestionField = (props) => {
   };
 
   const handleTargetOption = (value, type) => {
-    if (type === 'selectOption') {
+    if (type === "selectOption") {
       const newOption = props.value
-        .replace(regex.option, '')
-        .concat('{{' + value + '}}');
+        .replace(regex.option, "")
+        .concat("{{" + value + "}}");
 
       const splitOption = newOption
         .split(regex.dynamic)
-        .filter((key) => key !== '');
+        .filter((key) => key !== "");
 
       const dynamicOption = splitOption.map((key) => {
         return {
           name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
+          color: key.match(regex.dynamic) ? "#00cfe8" : "",
         };
       });
 
       setDynamicMatch(dynamicOption);
-      props.onChange(splitOption.join('') ?? '');
+      props.onChange(splitOption.join("") ?? "");
     }
   };
 
   const handleTargetInput = (value, type) => {
-    if (type !== 'reset') {
-      const splitInput = value.split(regex.dynamic).filter((key) => key !== '');
+    if (type !== "reset") {
+      const splitInput = value.split(regex.dynamic).filter((key) => key !== "");
 
       const dynamicInput = splitInput.map((key) => {
         return {
           name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
+          color: key.match(regex.dynamic) ? "#00cfe8" : "",
         };
       });
 
       setDynamicMatch(dynamicInput);
-      props.onChange(splitInput.join('') ?? '');
+      props.onChange(splitInput.join("") ?? "");
     }
 
     if (!value) {
@@ -80,7 +80,7 @@ const AutoSuggestionField = (props) => {
   return (
     <Autocomplete
       freeSolo
-      sx={{ width: '100%', position: 'relative' }}
+      sx={{ width: "100%", position: "relative" }}
       options={varsList}
       filterOptions={(options) => filterOptions(options)}
       value={props.value}
@@ -97,7 +97,7 @@ const AutoSuggestionField = (props) => {
             {...params}
             name={props.name}
             size={props.size}
-            sx={{ WebkitTextFillColor: props.value ? 'transparent' : '' }}
+            sx={{ WebkitTextFillColor: props.value ? "transparent" : "" }}
             type="text"
             error={props.error}
             placeholder={props.placeholder}
@@ -107,13 +107,13 @@ const AutoSuggestionField = (props) => {
             {...params}
             component="div"
             sx={{
-              position: 'absolute',
+              position: "absolute",
               left: 0,
-              top: '25%',
-              paddingLeft: '15.5px',
-              fontSize: '14px',
+              top: "25%",
+              paddingLeft: "15.5px",
+              fontSize: "14px",
               lineHeight: 1.1,
-              pointerEvents: 'none',
+              pointerEvents: "none",
               ...props.boxStyle,
             }}
           >
