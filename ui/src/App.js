@@ -564,17 +564,20 @@ function App() {
                         />
                       </Grid>
                       <Grid item xs={10}>
-                        <TextField
-                          style={{ width: "100%" }}
+                        <AutoSuggestionField
                           variant="filled"
                           label="Body"
                           value={options?.body}
-                          onChange={(e) =>
+                          onChange={(val) =>
                             setOptions((prevState) => ({
                               ...prevState,
-                              body: e.target.value,
+                              body: val,
                             }))
                           }
+                          boxStyle={{
+                            top: "50%",
+                            paddingLeft: "10px",
+                          }}
                         />
                       </Grid>
                     </Grid>

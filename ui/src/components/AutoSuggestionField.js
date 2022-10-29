@@ -102,6 +102,8 @@ const AutoSuggestionField = (props) => {
             error={props.error}
             placeholder={props.placeholder}
             helperText={props.helperText}
+            label={props.label}
+            variant={props.variant}
           />
           <Box
             {...params}
