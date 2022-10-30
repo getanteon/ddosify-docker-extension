@@ -17,7 +17,7 @@ FROM alpine:3.16.2
 ARG EXTENSION_NAME='Ddosify'
 ARG DESCRIPTION='High-performance, open-source and simple load testing tool, written in Golang.'
 ARG DESCRIPTION_LONG="<h1>Ddosify - High-performance load testing tool</h1><h2>⚡️ Features</h2><ul><li>Open-source: <a href='https://github.com/ddosify/ddosify'>https://github.com/ddosify/ddosify</a></li><li>Protocol Agnostic - Currently supporting HTTP, HTTPS. Other protocols are on the way</li><li>Different Load Types - Test your system's limits across different load types<ul><li>Linear</li><li>Incremental</li><li>Waved</li></ul></li><li>Dynamic Variables (Parameterization) Support: Just like the Postman, Ddosify supports dynamic variables. <a href='https://docs.ddosify.com/extra/dynamic-variables-parameterization'>Learn More.</a></li></ul><br>For no-code, distributed and geo-targeted load testing you can use Ddosify Cloud - <a href='https://ddosify.com'>https://ddosify.com</a> 🚀"
-ARG VENDOR='Ddosify Ltd.'
+ARG VENDOR='Ddosify Inc.'
 ARG LICENSE='AGPL-3.0'
 ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/ddosify-icon.svg'
 ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/01_ddosify_intro.png" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/02_ddosify_load_test.png" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/03_ddosify_advanced.png" } ]'
