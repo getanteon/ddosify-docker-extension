@@ -142,7 +142,11 @@ function App() {
   });
 
   const [headers, setHeaders] = useState([
-    { key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" },
+    {
+      key: "User-Agent",
+      value: "DdosifyDockerExtension/0.1.2",
+      id: Math.random(),
+    },
   ]);
 
   let handleHeaderChange = (index, target, value) => {
@@ -152,14 +156,12 @@ function App() {
   };
 
   let addHeader = () => {
-    setHeaders([...headers, { key: "", value: "" }]);
+    setHeaders([...headers, { key: "", value: "", id: Math.random() }]);
     // console.log(headers);
   };
 
-  let removeHeader = (i) => {
-    let newHeaders = [...headers];
-    newHeaders.splice(i, 1);
-    setHeaders(newHeaders);
+  let removeHeader = (id) => {
+    setHeaders(headers.filter((header) => header.id !== id));
   };
 
   const [basicAuthChecked, setbasicAuthChecked] = React.useState(false);
@@ -600,7 +602,7 @@ function App() {
                         container
                         justifyContent="center"
                         alignItems="center"
-                        key={index}
+                        key={element.id}
                         style={{ marginBottom: "15px" }}
                       >
                         <Grid item xs={5.5}>
@@ -630,24 +632,9 @@ function App() {
                               top: "35%",
                             }}
                           />
-                          {/* <TextField
-                            style={{ width: '98%' }}
-                            name="value"
-                            required
-                            variant="outlined"
-                            placeholder="Value"
-                            value={element.value ?? ''}
-                            onChange={(event) => {
-                              handleHeaderChange(
-                                index,
-                                'value',
-                                event.target.value
-                              );
-                            }}
-                          /> */}
                         </Grid>
                         <Grid item xs={1}>
-                          <IconButton onClick={() => removeHeader(index)}>
+                          <IconButton onClick={() => removeHeader(element.id)}>
                             <DeleteIcon />
                           </IconButton>
                         </Grid>
