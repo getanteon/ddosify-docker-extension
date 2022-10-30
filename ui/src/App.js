@@ -30,7 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuItem from "@mui/material/MenuItem";
 import jsPDF from "jspdf";
-import { dynamicVarsList } from "./dynamicVarsList";
+import AutoSuggestionField from "./components/AutoSuggestionField";
 
 const protocols = [
   {
@@ -111,7 +111,7 @@ const requestHeaders = [
   "Warning",
   "Dnt",
   "X-Requested-With",
-  "X-CSRF-Token"
+  "X-CSRF-Token",
 ];
 
 const client = createDockerDesktopClient();
@@ -121,20 +121,11 @@ function useDockerDesktopClient() {
 }
 
 function App() {
-
   const ddClient = useDockerDesktopClient();
-  const { varsList } = dynamicVarsList();
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
   const [running, setRunning] = useState(false);
   const [enableDownload, setDownload] = useState(false);
-  const [dynamicMatch, setDynamicMatch] = useState([]);
-
-  const regex = {
-    option: /({+[^{]*?$)/,
-    filter: /{([^{}]*?$)/,
-    dynamic: /({{[^{}]*?}})/
-  }
 
   const [options, setOptions] = useState({
     target: "",
@@ -150,94 +141,27 @@ function App() {
     proxy: "",
   });
 
-  const [headers, setHeaders] = useState([{ key: "User-Agent", value: "DdosifyDockerExtension/0.1.2" }]);
-
-  const handleTargetInput = (value, type) => {
-
-    if (type !== 'reset') {
-
-      const splitInput = value.split(regex.dynamic)
-        .filter((key) => key !== '');
-
-      const dynamicInput = splitInput.map((key) => {
-
-        return {
-          name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
-        }
-
-      });
-
-      setDynamicMatch(dynamicInput);
-      setOptions({ ...options, target: splitInput.join('') ?? '' });
-
-    }
-
-    if (!value) {
-      setDynamicMatch([]);
-    }
-
-  };
-
-  const handleTargetOption = (value, type) => {
-
-    if (type === 'selectOption') {
-
-      const newOption = options.target.replace(regex.option, '')
-        .concat('{{' + value + '}}');
-
-      const splitOption = newOption.split(regex.dynamic)
-        .filter((key) => key !== '');
-
-      const dynamicOption = splitOption.map((key) => {
-
-        return {
-          name: key.trim(),
-          color: key.match(regex.dynamic) ? '#00cfe8' : '',
-        }
-
-      });
-
-      setDynamicMatch(dynamicOption);
-      setOptions({ ...options, target: splitOption.join('') ?? '' });
-
-    }
-
-  };
-
-  const filterOptions = (options, state) => {
-
-    let filterValue = null;
-
-    for (const key in dynamicMatch) {
-
-      const matchOption = dynamicMatch[key];
-
-      if (matchOption.name.match(regex.filter)) {
-        filterValue = matchOption.name.match(regex.filter)[1];
-      }
-
-    };
-
-    return options.filter((option) => option.includes(filterValue));
-
-  };
+  const [headers, setHeaders] = useState([
+    {
+      key: "User-Agent",
+      value: "DdosifyDockerExtension/0.1.2",
+      id: Math.random(),
+    },
+  ]);
 
   let handleHeaderChange = (index, target, value) => {
     let newHeaders = [...headers];
-    newHeaders[index][target] = value ?? '';
+    newHeaders[index][target] = value ?? "";
     setHeaders(newHeaders);
   };
 
   let addHeader = () => {
-    setHeaders([...headers, { key: "", value: "" }]);
+    setHeaders([...headers, { key: "", value: "", id: Math.random() }]);
     // console.log(headers);
   };
 
-  let removeHeader = (i) => {
-    let newHeaders = [...headers];
-    newHeaders.splice(i, 1);
-    setHeaders(newHeaders);
+  let removeHeader = (id) => {
+    setHeaders(headers.filter((header) => header.id !== id));
   };
 
   const [basicAuthChecked, setbasicAuthChecked] = React.useState(false);
@@ -267,15 +191,14 @@ function App() {
     Proxy: ${options.proxy}
     `;
     return str;
-  }
+  };
   const downloadReport = () => {
-    let doc = new jsPDF('l', 'mm', [450, 210]);
+    let doc = new jsPDF("l", "mm", [450, 210]);
     let result = backendInfo.substring(backendInfo.indexOf("RESULT") - 1);
     let newStr = configValues() + result;
     doc.text(newStr, 10, 10);
     let dateTimeString = new Date().toLocaleDateString();
     doc.save(`Test Report-${dateTimeString}.pdf`);
-
   };
   useEffect(() => {
     if (res !== "") {
@@ -286,6 +209,7 @@ function App() {
       }
       setBackendInfo(prevBackendInfo + res);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [res]);
 
   useEffect(() => {
@@ -298,9 +222,7 @@ function App() {
         return;
       }
       if (options.request_count <= 0) {
-        ddClient.desktopUI.toast.error(
-          "Request count must be positive"
-        );
+        ddClient.desktopUI.toast.error("Request count must be positive");
         setRunning(false);
         return;
       }
@@ -313,9 +235,7 @@ function App() {
         return;
       }
       if (options.duration <= 0) {
-        ddClient.desktopUI.toast.error(
-          "Duration must be positive"
-        );
+        ddClient.desktopUI.toast.error("Duration must be positive");
         setRunning(false);
         return;
       }
@@ -401,6 +321,7 @@ function App() {
     } else {
       setRes("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running]);
 
   const stopDdosify = async () => {
@@ -461,6 +382,7 @@ function App() {
           <Grid container item>
             <Grid container item>
               <img
+                alt="ddosify logo"
                 height="100px"
                 src="https://ddosify-assets-analytics.s3.us-east-2.amazonaws.com/ddosify-docker-logo.svg"
                 style={{
@@ -499,7 +421,7 @@ function App() {
                     method: e.target.value,
                   }))
                 }
-              // helperText="Method"
+                // helperText="Method"
               >
                 {methods.map((method) => (
                   <MenuItem key={method.value} value={method.value}>
@@ -521,7 +443,7 @@ function App() {
                       protocol: e.target.value,
                     }))
                   }
-                // helperText="Protocol"
+                  // helperText="Protocol"
                 >
                   {protocols.map((protocol) => (
                     <MenuItem key={protocol.value} value={protocol.value}>
@@ -531,45 +453,12 @@ function App() {
                 </TextField>
               </Grid>
               <Grid item xs={10.4} sx={{ position: "relative" }}>
-                <Autocomplete
-                  freeSolo
-                  sx={{ width: "100%", position: 'relative' }}
-                  options={varsList}
-                  filterOptions={(options, state) => filterOptions(options, state)}
-                  value={options.target ?? ''}
-                  onChange={(event, value, type) => {
-                    handleTargetOption(value, type);
-                  }}
-                  inputValue={options.target ?? ''}
-                  onInputChange={(event, value, type) => {
-                    handleTargetInput(value, type);
-                  }}
-                  renderInput={(params) => (
-                    <>
-                      <TextField {...params}
-                        sx={{ WebkitTextFillColor: options.target ? 'transparent' : '' }}
-                        type="text"
-                        error={options.target === ""}
-                        placeholder="example.com"
-                        helperText="Target URL"
-                      />
-                      <Box {...params} component="div" sx={{
-                        position: "absolute",
-                        left: 0,
-                        top: '25%',
-                        paddingLeft: "15.5px",
-                        fontSize: "14px",
-                        lineHeight: 1.1,
-                        pointerEvents: 'none'
-                      }}>
-                        {dynamicMatch?.map((match, matchIndex) => (
-                          <Box {...params} component="span" key={matchIndex} sx={{ color: `${match.color}` }}>
-                            {match.name}
-                          </Box>
-                        ))}
-                      </Box>
-                    </>
-                  )}
+                <AutoSuggestionField
+                  value={options.target ?? ""}
+                  onChange={(val) => setOptions({ ...options, target: val })}
+                  error={options.target === ""}
+                  placeholder="example.com"
+                  helperText="Target URL"
                 />
               </Grid>
             </Grid>
@@ -578,7 +467,9 @@ function App() {
           <Grid item container columnSpacing={{ xs: 2 }}>
             <Grid item>
               <TextField
-                error={options?.request_count === "" || options?.request_count <= 0}
+                error={
+                  options?.request_count === "" || options?.request_count <= 0
+                }
                 required
                 variant="filled"
                 label="Request Count"
@@ -675,17 +566,20 @@ function App() {
                         />
                       </Grid>
                       <Grid item xs={10}>
-                        <TextField
-                          style={{ width: "100%" }}
+                        <AutoSuggestionField
                           variant="filled"
                           label="Body"
                           value={options?.body}
-                          onChange={(e) =>
+                          onChange={(val) =>
                             setOptions((prevState) => ({
                               ...prevState,
-                              body: e.target.value,
+                              body: val,
                             }))
                           }
+                          boxStyle={{
+                            top: "50%",
+                            paddingLeft: "10px",
+                          }}
                         />
                       </Grid>
                     </Grid>
@@ -708,7 +602,7 @@ function App() {
                         container
                         justifyContent="center"
                         alignItems="center"
-                        key={index}
+                        key={element.id}
                         style={{ marginBottom: "15px" }}
                       >
                         <Grid item xs={5.5}>
@@ -719,29 +613,28 @@ function App() {
                             options={requestHeaders}
                             inputValue={element.key}
                             onInputChange={(event, value) => {
-                              handleHeaderChange(index, 'key', value);
+                              handleHeaderChange(index, "key", value);
                             }}
-                            renderInput={(params) =>
-                              <TextField {...params}
-                                placeholder="Key"
-                              />}
+                            renderInput={(params) => (
+                              <TextField {...params} placeholder="Key" />
+                            )}
                           />
                         </Grid>
                         <Grid item xs={5.5}>
-                          <TextField
-                            style={{ width: "98%" }}
+                          <AutoSuggestionField
                             name="value"
-                            required
-                            variant="outlined"
                             placeholder="Value"
                             value={element.value ?? ""}
-                            onChange={(event) => {
-                              handleHeaderChange(index, 'value', event.target.value);
+                            onChange={(val) => {
+                              handleHeaderChange(index, "value", val);
+                            }}
+                            boxStyle={{
+                              top: "35%",
                             }}
                           />
                         </Grid>
                         <Grid item xs={1}>
-                          <IconButton onClick={() => removeHeader(index)}>
+                          <IconButton onClick={() => removeHeader(element.id)}>
                             <DeleteIcon />
                           </IconButton>
                         </Grid>
@@ -780,19 +673,19 @@ function App() {
                       style={{ marginTop: "10px" }}
                     >
                       <Grid item xs={6}>
-                        <TextField
-                          style={{ width: "100%" }}
-                          size="small"
-                          required
-                          variant="outlined"
+                        <AutoSuggestionField
                           placeholder="Username"
-                          value={options?.basic_auth_username}
-                          onChange={(e) =>
+                          size="small"
+                          value={options?.basic_auth_username ?? ""}
+                          onChange={(val) => {
                             setOptions((prevState) => ({
                               ...prevState,
-                              basic_auth_username: e.target.value,
-                            }))
-                          }
+                              basic_auth_username: val,
+                            }));
+                          }}
+                          boxStyle={{
+                            paddingLeft: "10px",
+                          }}
                         />
                       </Grid>
                       <Grid item xs={6}>
