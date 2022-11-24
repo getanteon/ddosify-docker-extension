@@ -739,7 +739,7 @@ function App() {
             <Grid item>
               <Typography>
                 <span style={{ color: "#aaa49f" }}>
-                  Tip: Use{" "}
+                 💡 Tip: Use{" "}
                   <span style={{ color: "#00cfe8" }}>
                     {"{{_variableName}}"}
                   </span>{" "}
