@@ -28,9 +28,12 @@ import "./App.css";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DownloadIcon from '@mui/icons-material/Download';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import MenuItem from "@mui/material/MenuItem";
-import jsPDF from "jspdf";
 import AutoSuggestionField from "./components/AutoSuggestionField";
+import { downloadReport } from './Report.js'
 
 const protocols = [
   {
@@ -176,30 +179,6 @@ function App() {
     setProxyChecked(event.target.checked);
   };
 
-  const configValues = () => {
-    let str = `
-    Configuration:
-
-    Target URL: ${options.target}
-    Load Type: ${options.load_type}
-    Duration: ${options.duration}
-    Request Count: ${options.request_count}
-    Timeout: ${options.timeout}
-    Headers: ${options.headers}
-    Basic Auth: UserName: ${options.basic_auth_username}
-                Password: ${options.basic_auth_password}
-    Proxy: ${options.proxy}
-    `;
-    return str;
-  };
-  const downloadReport = () => {
-    let doc = new jsPDF("l", "mm", [450, 210]);
-    let result = backendInfo.substring(backendInfo.indexOf("RESULT") - 1);
-    let newStr = configValues() + result;
-    doc.text(newStr, 10, 10);
-    let dateTimeString = new Date().toLocaleDateString();
-    doc.save(`Test Report-${dateTimeString}.pdf`);
-  };
   useEffect(() => {
     if (res !== "") {
       let prevBackendInfo = backendInfo;
@@ -421,7 +400,7 @@ function App() {
                     method: e.target.value,
                   }))
                 }
-                // helperText="Method"
+              // helperText="Method"
               >
                 {methods.map((method) => (
                   <MenuItem key={method.value} value={method.value}>
@@ -443,7 +422,7 @@ function App() {
                       protocol: e.target.value,
                     }))
                   }
-                  // helperText="Protocol"
+                // helperText="Protocol"
                 >
                   {protocols.map((protocol) => (
                     <MenuItem key={protocol.value} value={protocol.value}>
@@ -787,7 +766,7 @@ function App() {
                 onClick={() => setRunning(true)}
                 disabled={running}
               >
-                Start Load Test
+                <PlayCircleFilledWhiteIcon /> &nbsp; Start Load Test
               </Button>
             </Grid>
             <Grid item>
@@ -798,18 +777,19 @@ function App() {
                 onClick={stopDdosify}
                 disabled={!running}
               >
-                Stop
+                <StopCircleIcon /> &nbsp; Stop
               </Button>
             </Grid>
             <Grid item>
               <Button
                 size="large"
                 variant="contained"
-                color="error"
-                onClick={downloadReport}
+                color="success"
+                onClick={() => downloadReport(options, headers, basicAuthChecked, proxyChecked, backendInfo)}
                 disabled={!enableDownload}
+                visibility={!enableDownload}
               >
-                Download Report
+                <DownloadIcon /> &nbsp; Report
               </Button>
             </Grid>
           </Grid>

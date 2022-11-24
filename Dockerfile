@@ -1,4 +1,4 @@
-FROM ddosify/ddosify:v0.8.2 AS builder
+FROM ddosify/ddosify:v0.9.0 AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
