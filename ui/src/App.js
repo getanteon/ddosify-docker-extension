@@ -750,6 +750,22 @@ function App() {
                 </span>
               </Typography>
             </Grid>
+            <br/>
+            <Grid item>
+              <Typography>
+                <span style={{ color: "#aaa49f" }}>
+                 💡 Tip: Use{" "}
+                  <span style={{ color: "#00cfe8" }}>
+                    host.docker.internal
+                  </span>{" "}
+                  instead of{" "}
+                  <span style={{ color: "#00cfe8" }}>
+                    localhost
+                  </span>{" "} 
+                  for the target URL to access the host network.
+                </span>
+              </Typography>
+            </Grid>
           </Grid>
 
           <Grid
