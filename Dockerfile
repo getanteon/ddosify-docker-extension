@@ -1,4 +1,4 @@
-FROM ddosify/ddosify:v0.9.0 AS builder
+FROM ddosify/ddosify:v0.10.0 AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
@@ -16,14 +16,15 @@ FROM alpine:3.16.2
 
 ARG EXTENSION_NAME='Ddosify'
 ARG DESCRIPTION='High-performance, open-source and simple load testing tool, written in Golang.'
-ARG DESCRIPTION_LONG="<h1>Ddosify - High-performance load testing tool</h1><h2>⚡️ Features</h2><ul><li>Open-source: <a href='https://github.com/ddosify/ddosify'>https://github.com/ddosify/ddosify</a></li><li>Protocol Agnostic - Currently supporting HTTP, HTTPS. Other protocols are on the way</li><li>Different Load Types - Test your system's limits across different load types<ul><li>Linear</li><li>Incremental</li><li>Waved</li></ul></li><li>Dynamic Variables (Parameterization) Support: Just like the Postman, Ddosify supports dynamic variables. <a href='https://docs.ddosify.com/extra/dynamic-variables-parameterization'>Learn More.</a></li></ul><br>For no-code, distributed and geo-targeted load testing you can use Ddosify Cloud - <a href='https://ddosify.com'>https://ddosify.com</a> 🚀"
+ARG DESCRIPTION_LONG="<h1>Ddosify - High-performance load testing tool</h1><h2>⚡️ Features</h2><ul><li>Open-source: <a href='https://github.com/ddosify/ddosify'>https://github.com/ddosify/ddosify</a></li><li>Protocol Agnostic - Currently supporting HTTP, HTTPS. Other protocols are on the way</li><li>Different Load Types - Test your system's limits across different load types<ul><li>Linear</li><li>Incremental</li><li>Waved</li></ul></li><li>Dynamic Variables (Parameterization) Support: Just like the Postman, Ddosify supports dynamic variables. <a href='https://docs.ddosify.com/extra/dynamic-variables-parameterization'>Learn More.</a></li><li>Save load testing result as PDF</a></li></ul><br>For no-code, distributed and geo-targeted load testing you can use Ddosify Cloud - <a href='https://ddosify.com'>https://ddosify.com</a> 🚀"
 ARG VENDOR='Ddosify Inc.'
 ARG LICENSE='AGPL-3.0'
-ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/ddosify-icon.svg'
-ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/01_ddosify_intro.png" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/02_ddosify_load_test.png" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/03_ddosify_advanced.png" } ]'
+
+ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/docker/ddosify-square-icon-db.svg'
+ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/docker/01_ddosify_docker_intro.jpg" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/02_ddosify_docker_load_test.jpg" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/03_ddosify_docker_advanced.jpg" } ]'
 ARG PUBLISHER_URL='https://ddosify.com/'
 ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
-ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.9.0</li> <li>Download the load testing result with PDF</li> <li>Auto-suggestion and highlighting on Target URL, Headers, Body, Basic Auth Username</li>  </ul>'
+ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.10.0</li> <li>Update logo and icons</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
 LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \

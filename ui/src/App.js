@@ -1,5 +1,6 @@
 import { DockerMuiThemeProvider } from "@docker/docker-mui-theme";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Accordion,
   AccordionDetails,
@@ -124,6 +125,9 @@ function useDockerDesktopClient() {
 }
 
 function App() {
+  const isDarkModeEnabled = useMediaQuery('(prefers-color-scheme: dark)');
+  const logo = isDarkModeEnabled ? "https://d2uj9largygsoq.cloudfront.net/docker/ddosify-logo-db.svg" : "https://d2uj9largygsoq.cloudfront.net/docker/ddosify-logo-wb.svg";
+
   const ddClient = useDockerDesktopClient();
   const [backendInfo, setBackendInfo] = useState("");
   const [res, setRes] = useState("");
@@ -362,12 +366,13 @@ function App() {
             <Grid container item>
               <img
                 alt="ddosify logo"
-                height="100px"
-                src="https://ddosify-assets-analytics.s3.us-east-2.amazonaws.com/ddosify-docker-logo.svg"
+                height="70px"
+                src={logo}
                 style={{
                   display: "block",
                   marginRight: "auto",
                   marginLeft: "auto",
+                  marginBottom: "1rem"
                 }}
               />
             </Grid>
@@ -733,13 +738,14 @@ function App() {
           <Grid
             item
             container
-            columnSpacing={{ xs: 2 }}
             justifyContent="flex-start"
+            direction="column"
+            alignItems="flex-start"
           >
             <Grid item>
               <Typography>
                 <span style={{ color: "#aaa49f" }}>
-                 💡 Tip: Use{" "}
+                  💡 Tip: Use{" "}
                   <span style={{ color: "#00cfe8" }}>
                     {"{{_variableName}}"}
                   </span>{" "}
@@ -750,18 +756,18 @@ function App() {
                 </span>
               </Typography>
             </Grid>
-            <br/>
+            <br />
             <Grid item>
               <Typography>
                 <span style={{ color: "#aaa49f" }}>
-                 💡 Tip: Use{" "}
+                  💡 Tip: Use{" "}
                   <span style={{ color: "#00cfe8" }}>
                     host.docker.internal
                   </span>{" "}
                   instead of{" "}
                   <span style={{ color: "#00cfe8" }}>
                     localhost
-                  </span>{" "} 
+                  </span>{" "}
                   for the target URL to access the host network.
                 </span>
               </Typography>
