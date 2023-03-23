@@ -1,4 +1,4 @@
-FROM ddosify/ddosify:v0.10.0 AS builder
+FROM ddosify/ddosify:v0.15.3 AS builder
 
 FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
 WORKDIR /ui
@@ -24,7 +24,7 @@ ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/docker/ddosify-square-icon-d
 ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/docker/01_ddosify_docker_intro.jpg" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/02_ddosify_docker_load_test.jpg" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/03_ddosify_docker_advanced.jpg" } ]'
 ARG PUBLISHER_URL='https://ddosify.com/'
 ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
-ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.10.0</li> <li>Update logo and icons</li> </ul>'
+ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.15.3</li> <li>Update icon</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
 LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \
@@ -43,6 +43,6 @@ LABEL org.opencontainers.image.title="${EXTENSION_NAME}" \
 COPY --from=builder /bin/ddosify /
 COPY docker-compose.yaml .
 COPY metadata.json .
-COPY ddosify-icon.svg .
+COPY ddosify.svg .
 COPY --from=client-builder /ui/build ui
 CMD [ "sleep", "infinity" ]

@@ -1,5 +1,5 @@
 {
-  "icon": "ddosify-icon.svg",
+  "icon": "ddosify.svg",
   "vm": {
     "composefile":"docker-compose.yaml"
   },

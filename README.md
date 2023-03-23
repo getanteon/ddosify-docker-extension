@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/ddosify/ddosify-docker-extension/main/assets/ddosify_docker_extension_hd_cropped_comp.gif" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
+<img src="assets/ddosify_docker_extension.jpg" stype="background-size: cover;" alt="Ddosify Docker Extension - High-performance, simple-to-use load testing tool quick start" />
 </p>
 
 
