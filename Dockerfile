@@ -1,6 +1,6 @@
-FROM ddosify/ddosify:v0.15.3 AS builder
+FROM ddosify/ddosify:v1.0.6 AS builder
 
-FROM --platform=$BUILDPLATFORM node:17.7-alpine3.14 AS client-builder
+FROM --platform=$BUILDPLATFORM node:24-alpine AS client-builder
 WORKDIR /ui
 # cache packages in layer
 COPY ui/package.json /ui/package.json
@@ -12,18 +12,18 @@ RUN --mount=type=cache,target=/usr/src/app/.npm \
 COPY ui /ui
 RUN npm run build
 
-FROM alpine:3.16.2
+FROM alpine
 
 ARG EXTENSION_NAME='Ddosify'
 ARG DESCRIPTION='High-performance, open-source and simple load testing tool, written in Golang.'
-ARG DESCRIPTION_LONG="<h1>Ddosify - High-performance load testing tool</h1><h2>⚡️ Features</h2><ul><li>Open-source: <a href='https://github.com/ddosify/ddosify'>https://github.com/ddosify/ddosify</a></li><li>Protocol Agnostic - Currently supporting HTTP, HTTPS. Other protocols are on the way</li><li>Different Load Types - Test your system's limits across different load types<ul><li>Linear</li><li>Incremental</li><li>Waved</li></ul></li><li>Dynamic Variables (Parameterization) Support: Just like the Postman, Ddosify supports dynamic variables. <a href='https://docs.ddosify.com/extra/dynamic-variables-parameterization'>Learn More.</a></li><li>Save load testing result as PDF</a></li></ul><br>For no-code, distributed and geo-targeted load testing you can use Ddosify Cloud - <a href='https://ddosify.com'>https://ddosify.com</a> 🚀"
+ARG DESCRIPTION_LONG="<h1>Ddosify - High-performance load testing tool</h1><h2>⚡️ Features</h2><ul><li>Open-source: <a href='https://github.com/getanteon/anteon/tree/master/ddosify_engine'>https://github.com/getanteon/anteon</a></li><li>Protocol Agnostic - Currently supporting HTTP, HTTPS. Other protocols are on the way</li><li>Different Load Types - Test your system's limits across different load types<ul><li>Linear</li><li>Incremental</li><li>Waved</li></ul></li><li>Dynamic Variables (Parameterization) Support: Just like the Postman, Ddosify supports dynamic variables. <a href='https://getanteon.com/docs/performance-testing/dynamic-variables-parametrization'>Learn More.</a></li><li>Save load testing result as PDF</li></ul>"
 ARG VENDOR='Ddosify Inc.'
 ARG LICENSE='AGPL-3.0'
 
 ARG ICON_URL='https://d2uj9largygsoq.cloudfront.net/docker/ddosify-square-icon-db.svg'
-ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://d2uj9largygsoq.cloudfront.net/docker/01_ddosify_docker_intro.jpg" }, { "alt": "Ddosify Load Test View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/02_ddosify_docker_load_test.jpg" }, { "alt": "Ddosify Advanced View", "url": "https://d2uj9largygsoq.cloudfront.net/docker/03_ddosify_docker_advanced.jpg" } ]'
-ARG PUBLISHER_URL='https://ddosify.com/'
-ARG ADDITIONAL_URLS='[ { "title": "Ddosify Cloud", "url": "https://ddosify.com" }, { "title": "GitHub", "url": "https://github.com/ddosify/ddosify" }, { "title": "Support", "url": "https://github.com/ddosify/ddosify/discussions" }, { "title": "Discord", "url": "https://discord.gg/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://docs.ddosify.com/" }, { "title": "Terms of Service", "url": "https://ddosify.com/terms" }, { "title": "Privacy policy", "url": "https://ddosify.com/privacy" }]'
+ARG SCREENSHOTS_URLS='[ { "alt": "Ddosify Intro", "url": "https://raw.githubusercontent.com/getanteon/ddosify-docker-extension/refs/heads/main/assets/01_Ddosify_Intro.jpg" }, { "alt": "Ddosify Load Test Report", "url": "https://raw.githubusercontent.com/getanteon/ddosify-docker-extension/refs/heads/main/assets/02_Ddosify_Report.jpg" }, { "alt": "Ddosify Advanced View", "url": "https://raw.githubusercontent.com/getanteon/ddosify-docker-extension/refs/heads/main/assets/03_Ddosify_Advanced.jpg" } ]'
+ARG PUBLISHER_URL='https://getanteon.com/'
+ARG ADDITIONAL_URLS='[ { "title": "GitHub", "url": "https://github.com/getanteon/anteon/tree/master/ddosify_engine" }, { "title": "Support", "url": "https://github.com/getanteon/anteon/discussions" }, { "title": "Discord", "url": "https://discord.com/invite/9KdnrSUZQg" }, { "title": "Documentation", "url": "https://getanteon.com/docs/performance-testing/" } ]'
 ARG CHANGELOG='<p>Extension changelog:</p> <ul> <li>Change Ddosify version to v0.15.3</li> <li>Update icon</li> </ul>'
 ARG DD_VERSION='>=0.2.3'
 
